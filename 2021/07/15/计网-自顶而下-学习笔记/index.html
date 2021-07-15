@@ -17,7 +17,7 @@
 <meta property="og:description" content="第一章 计算机网络与因特网 什么是因特网？ 两种回答方式：①能够描述因特网的具体构成，即构成因特网的基本硬件和软件组成；②能够根据为分布式应用提供服务的联网基础设施来描述因特网。  对①的描述： 因特网应用程序运行在端系统上，也就是它们并不运行在网络核心中的分组交换机中。即使分组交换机能够加速端系统间的数据交换，但它们并不在意作为数据的源或宿的应用程序。  对②的描述： 将因特网描述为应用程序的平">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2021-07-15T13:59:55.000Z">
-<meta property="article:modified_time" content="2021-07-15T14:02:36.099Z">
+<meta property="article:modified_time" content="2021-07-15T14:47:35.029Z">
 <meta property="article:author" content="John Doe">
 <meta name="twitter:card" content="summary">
   
@@ -619,8 +619,8 @@
 <table>
 <thead>
 <tr>
-<th align="center">AF_INET</th>
-<th align="center">IPv4网络通信</th>
+<th align="center">代码</th>
+<th align="center">含义</th>
 </tr>
 </thead>
 <tbody><tr>
@@ -635,14 +635,18 @@
 <td align="center"><strong>AF_UNIX, AF_LOCAL</strong></td>
 <td align="center"><strong>本地通信</strong></td>
 </tr>
+<tr>
+<td align="center"><strong>AF_INET</strong></td>
+<td align="center"><strong>IPv4网络通信</strong></td>
+</tr>
 </tbody></table>
 </li>
 <li><p>参数type：表示套接字的类型，包括了：</p>
 <table>
 <thead>
 <tr>
-<th align="center">SOCK_STREAM</th>
-<th align="center">TCP字节流套接字</th>
+<th align="center">代码</th>
+<th align="center">含义</th>
 </tr>
 </thead>
 <tbody><tr>
@@ -657,14 +661,18 @@
 <td align="center"><strong>SOCK_SEQPACKET</strong></td>
 <td align="center"><strong>有序分组套接字</strong></td>
 </tr>
+<tr>
+<td align="center"><strong>SOCK_STREAM</strong></td>
+<td align="center"><strong>TCP字节流套接字</strong></td>
+</tr>
 </tbody></table>
 </li>
 <li><p>参数protocol：选择传输协议的类型</p>
 <table>
 <thead>
 <tr>
-<th align="center">IPPROTO_TCP</th>
-<th align="center">TCP传输协议</th>
+<th align="center">代码</th>
+<th align="center">含义</th>
 </tr>
 </thead>
 <tbody><tr>
@@ -678,6 +686,10 @@
 <tr>
 <td align="center"><strong>IPPTOTO_TIPCTCP</strong></td>
 <td align="center"><strong>TIPC传输协议</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>IPPROTO_TCP</strong></td>
+<td align="center"><strong>TCP传输协议</strong></td>
 </tr>
 </tbody></table>
 </li>
