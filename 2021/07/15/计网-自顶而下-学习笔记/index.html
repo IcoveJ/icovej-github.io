@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      24.1k 字
+      30.9k 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      260
+      333
        分钟
     </span>
   
@@ -1058,26 +1058,226 @@
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;iostream&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cmath&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;ctime&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;cstdlib&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string">&lt;windows.h&gt;</span></span><br><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-comment">// 设置一些判断位</span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> AllNormal 0	<span class="hljs-comment">// 传输正常</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> Time_out 1	<span class="hljs-comment">// 传输超时</span></span><br><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> DupAck 2	<span class="hljs-comment">// 3个冗余ACK</span></span><br><br><span class="hljs-comment">// 设置一些必要的全局参数</span><br><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> MSS = <span class="hljs-number">500</span>;	<span class="hljs-comment">// 是以慢启动中的例子将单个报文段长度设置为的500字节(B)</span><br><span class="hljs-keyword">int</span> ssthresh = <span class="hljs-number">1460</span>;	<span class="hljs-comment">// 在linux内核中是将sstresh设置为的1460</span><br><span class="hljs-keyword">int</span> cwnd = <span class="hljs-number">3</span>*MSS;		<span class="hljs-comment">// 在linux内核中同样是将cwnd初始为的3，以MSS作为的单位</span><br><span class="hljs-keyword">int</span> index = <span class="hljs-number">0</span>;			<span class="hljs-comment">// 传播的轮次</span><br><span class="hljs-keyword">int</span> DataTrans = <span class="hljs-number">0</span>;		<span class="hljs-comment">// 每次传输成功传输的字节</span><br><span class="hljs-keyword">int</span> DataSum;			<span class="hljs-comment">// 本次传输的总数据量大小，单位是字节(B)</span><br><br><span class="hljs-comment">/* 设置一个函数来随机产生拥塞</span><br><span class="hljs-comment">		返回值：</span><br><span class="hljs-comment">			0：未丢包	网络正常</span><br><span class="hljs-comment">			1：重传计时器超时	对应策略：慢启动		</span><br><span class="hljs-comment">			2：3个冗余ACK	对应策略：快速恢复</span><br><span class="hljs-comment">*/</span><br><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">IsCongestion_Control</span><span class="hljs-params">(<span class="hljs-keyword">int</span> cwnd)</span></span>&#123;<br>    <span class="hljs-keyword">int</span> p = cwsn / MSS * <span class="hljs-number">2</span>;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">rand</span>()%<span class="hljs-number">100</span> &lt; p)&#123;<br>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">rand</span>()%<span class="hljs-number">100</span> &lt; <span class="hljs-number">50</span>)&#123;<br>            <span class="hljs-keyword">return</span> Time_out;<br>        &#125;<span class="hljs-keyword">else</span>&#123;<br>            <span class="hljs-keyword">return</span> DupAck;<br>        &#125;<br>    &#125;<span class="hljs-keyword">else</span>&#123;<br>        <span class="hljs-keyword">return</span> AllNormal;<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// 数据的传输</span><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">TransData</span><span class="hljs-params">()</span></span>&#123;<br>    <span class="hljs-keyword">bool</span> isSlowStart = <span class="hljs-literal">true</span>;	<span class="hljs-comment">// 是否慢启动</span><br>    <br>    <span class="hljs-comment">// 传输数据</span><br>    DataTrans += cwnd;<br>    <span class="hljs-keyword">if</span> (cwnd &lt; ssthresh)&#123;<span class="hljs-comment">// 慢启动</span><br>        cout &lt;&lt; <span class="hljs-string">&quot;第&quot;</span> &lt;&lt; index++ &lt;&lt; <span class="hljs-string">&quot;轮传输&quot;</span> &lt;&lt; endl;<br>        cout &lt;&lt; <span class="hljs-string">&quot;慢启动：拥塞窗口cwnd=&quot;</span> &lt;&lt; cwnd/MSS &lt;&lt; <span class="hljs-string">&quot;,慢启动门限ssthresh=&quot;</span> &lt;&lt; ssthresh/MSS &lt;&lt; endl;<br>    &#125;<span class="hljs-keyword">else</span>&#123;<span class="hljs-comment">// 也就是cwnd &gt;= ssthresh,造成拥塞避免</span><br>        cout &lt;&lt; <span class="hljs-string">&quot;第&quot;</span> &lt;&lt; index++ &lt;&lt; <span class="hljs-string">&quot;轮传输&quot;</span> &lt;&lt; endl;<br>        cout &lt;&lt; <span class="hljs-string">&quot;慢启动：拥塞窗口cwnd=&quot;</span> &lt;&lt; cwnd/MSS &lt;&lt; <span class="hljs-string">&quot;,慢启动门限ssthresh=&quot;</span> &lt;&lt; ssthresh/MSS &lt;&lt; endl;<br>    	isSlowStart = <span class="hljs-literal">false</span>;<br>    &#125;<br>    <br>    <span class="hljs-comment">// 根据数据传输过程中的isSlowStart标志位对是否拥塞进行判断</span><br>    <span class="hljs-keyword">if</span> (!<span class="hljs-built_in">IsCongestion_Control</span>(cwnd))&#123;<span class="hljs-comment">// 没有拥塞</span><br>        <span class="hljs-keyword">if</span> (isSlowStart)&#123;<span class="hljs-comment">// 慢启动</span><br>            cout &lt;&lt; <span class="hljs-string">&quot;检测到网络正常,将窗口加倍!\n&quot;</span>;<br>            cwnd *= <span class="hljs-number">2</span>;<br>        &#125;<span class="hljs-keyword">else</span>&#123;<br>            cout&lt;&lt;<span class="hljs-string">&quot;检测到网络正常,将窗口线性增加!\n&quot;</span>;<br>            cwnd += MSS*(<span class="hljs-number">1.0</span>*MSS/cwnd)*cwnd/MSS;<br>        &#125;<br>    &#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">IsCongestion_Control</span>(cwnd) == Time_out)&#123;<span class="hljs-comment">// 超时的情况</span><br>        DataTrans -= cwnd;<br>        <br>        <span class="hljs-comment">// 慢启动</span><br>        cout &lt;&lt; <span class="hljs-string">&quot;重传计时器超时,回退慢启动!门限置当前窗口减半，窗口置1!\n&quot;</span>;<br>        ssthresh = cwnd/<span class="hljs-number">2</span>;<br>        cwnd = <span class="hljs-number">1</span> * MSS;<br>    &#125;<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">IsCongestion_Control</span>(cwnd) == DupAck)&#123;<span class="hljs-comment">// 3个冗余ACK</span><br>        cout&lt;&lt;<span class="hljs-string">&quot;收到3个重复ACK，采取快恢复策略!门限置当前窗口减半,窗口置新门限!\n&quot;</span>;<br>		ssthresh=cwnd/<span class="hljs-number">2</span>;<br>		cwnd=ssthresh;<br>    &#125;<span class="hljs-keyword">else</span>&#123;<br>        cout &lt;&lt; <span class="hljs-string">&quot;拥塞异常！发挥异常值：&quot;</span> &lt;&lt; <span class="hljs-built_in">IsCongestion_Control</span>(cwnd) &lt;&lt; endl;<br>        <span class="hljs-built_in">exit</span>(<span class="hljs-number">1</span>);<br>    &#125;<br>    <br>    <span class="hljs-keyword">if</span> (DataTrans &lt; DataSum)&#123;<br>        cout &lt;&lt; <span class="hljs-string">&quot;已经传输&quot;</span> &lt;&lt; DataTrans &lt;&lt; <span class="hljs-string">&quot;B,剩余为传输的数据为：&quot;</span> &lt;&lt; DataSum - DataTrans &lt;&lt; <span class="hljs-string">&quot;B\n&quot;</span>;<br>    &#125;<span class="hljs-keyword">else</span>&#123;<br>        cout &lt;&lt; <span class="hljs-string">&quot;传输完毕！\n&quot;</span>;<br>        <span class="hljs-keyword">return</span>;<br>    &#125;<br>    <br>    cout &lt;&lt; endl;<br>    <span class="hljs-built_in">Sleep</span>(<span class="hljs-number">1000</span>*(cwnd%<span class="hljs-number">3</span>)+<span class="hljs-number">1</span>);<span class="hljs-comment">// 随机停1~3秒</span><br>    <span class="hljs-built_in">TransData</span>();<span class="hljs-comment">// 递归循环，直至数据发送完毕</span><br>&#125;<br></code></pre></td></tr></table></figure></li>
 </ul>
 <h1 id="第四章-网络层"><a href="#第四章-网络层" class="headerlink" title="第四章 网络层"></a>第四章 网络层</h1><ul>
-<li>网络层被分解为两个相互作用的部分：<strong>数据平面</strong>和<strong>控制平面</strong></li>
-<li>网络层的作用简单来说就是将分组从一台发送主机移动到一台接收主机。通过<strong>转发</strong>和<strong>路由选择</strong>来实现：<ul>
-<li>转发：当一个分组到达某路由器的一条输入链路时，该路由器必须将该分组移动到适当的输出链路中。同时，转发也是数据平台中实现的唯一功能</li>
-<li>路由选择：</li>
+<li><p>网络层被分解为两个相互作用的部分：<strong>数据平面</strong>和<strong>控制平面</strong></p>
+</li>
+<li><p>网络层的作用简单来说就是将分组从一台发送主机移动到一台接收主机。通过<strong>转发</strong>和<strong>路由选择</strong>来实现：</p>
+<ul>
+<li>转发：当一个分组到达某路由器的一条输入链路时，该路由器必须将该分组移动到适当的输出链路中。同时，转发也是数据平台中实现的唯一功能。通常用硬件来实现。</li>
+<li>路由选择：主要是使用<strong>路由选择算法</strong>，以实现——当分组从发送方流向接收方时，网络层必须决定这些分组所采用的路由或路径。通常用软件来实现。</li>
 </ul>
 </li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
-<li></li>
+<li><p><strong>网络服务模型</strong>定义了分组在发送与接收端系统之间的端到端运输特性。</p>
+</li>
+<li><p>网络提供的服务包括：</p>
+<ul>
+<li>确保交付：确保了分组最终到达目的地</li>
+<li>具有时延上界的确保交付：在确保分组的交付的基础上，还规定了在特定的主机到主机时延上界内交付</li>
+<li>有序分组交付：确保分组以它们发送的顺序到达目的地</li>
+<li>确保最小带宽：之要发送主机以低于特定比特率的速率传输比特，则所有分组最终会交付到目的主机。</li>
+<li>安全性：网络层能够在源加密所有数据报并在目的地解密这些分组，从而对所有运输层报文段提供机密性。</li>
+</ul>
+</li>
+<li><p>因特网的网络层提供了单一的服务：<strong>尽力而为服务</strong>。但使用这种服务，传送的分组既不能保证以它们发送的顺序被接受，，也不能保证它们最终的交付；既不能保证端到端时延，也不能保证有最小的带宽。</p>
+</li>
+<li><p>路由器的4个组件：输入端口、交换结构、输出端口、路由选择处理器</p>
+<ul>
+<li><strong>输入端口</strong>：它执行的功能有——①在路由器中执行终结入物理链路的物理层功能；②与位于入链路远端的数据链路层交互来执行数据链路层功能；③查找功能</li>
+<li><strong>交换结构</strong>：将路由器的输入端口连接到它的输出端口。这是一个网络路由器中的网络。</li>
+<li><strong>输出端口</strong>：存储着从交换结构接收的分组，并通过执行必要的链路层和物理层功能在输出链路上传输这些分组</li>
+<li><strong>路由选择处理器</strong>：执行控制平面功能和网络管理功能。在传统路由器中，执行路由选择协议；在SDN路由器中路由选择处理器负责与远程控制器通信，目的是接收由远程控制器计算的转发表项，并在该路由器的输入端口安装这些表项。</li>
+</ul>
+</li>
+<li><p>路由器转发表的表项匹配规则：<strong>最长前缀匹配规则</strong>——在该表中寻找最长的匹配项，并向与最长前缀匹配</p>
+</li>
+<li><p><strong>查找</strong>在输入端口处理中可认为是最重要的动作，但必须采取许多其他的动作，包括：①必须出现物理层和链路层处理；②必须检查分组的版本号、检验和以及寿命字段，并且重写后两个字段；③必须更新用于网络管理的计数器。</p>
+</li>
+<li><p><strong>交换</strong>有三种方式：</p>
+<ul>
+<li><p><strong>经内存交换</strong>：最简单、最早的路由器是传统的计算机，在输入端口和输出端口间的交换实在CPU（路由选择处理器）的直接控制下完成的。此时不能同时转发两个分组，即使它们有不同的目的端口，因为类似于传统操作系统中的I/O设备一样，经过共享系统总线一次仅能执行一个内存读/写。</p>
+<p>许多现代路由器仍然通过内存来进行交换，但与传统路由器的区别在于：目的地址的查找和将分组存储（交换）进适当的内存存储位置是由输入线路卡来处理的。</p>
+</li>
+<li><p><strong>经总线交换</strong>：输入端口经一根共享总线将分组直接传送到输出端口，并不需要路由选择处理器的干预。</p>
+</li>
+<li><p><strong>经互联网络交换</strong>：上面两种交换方式都受到单一、共享式总线带宽限制。要想克服它，就要使用更为复杂的互联网络。<strong>纵横式交换机</strong>是一种给由2N条总线组成的互联网络，它连接N个输入端口与N个输出端口，每条垂直的总线在交叉点与每条水平的总线交叉，交叉点通过交换结构控制器能够在任何时候开启和闭合。</p>
+<p>纵横式交换机是<strong>非阻塞的</strong>，也就是只要没有其他分组当前被转发到该输出端口，转发到输出端口的分组将不会被到达输出端口的分组阻塞。但是若来自两个不同输入端口的两个分组，其目的地为相同的输出端口，则一个分组必须在<strong>输入端</strong>等待，因为在某个时刻经给定总线进能够发送一个分组。</p>
+</li>
+</ul>
+</li>
+<li><p>排队的位置和程度将取决于流量负载、交换结构的相对速率和线路速率。</p>
+<ul>
+<li><p>输入排队：这种排队发生在<strong>交换结构无法快速地使所有分组无时延地通过它传送</strong>。可能情况有不同输入端口向同一个输出端口输出；同一个输出端口的多个分组发往不同的输出端口。</p>
+</li>
+<li><p>输出排队：这种排队发生在<strong>当有多个输入端口的分组的目的地是相同的输出端口时</strong>。最极端的情况就是排队的分组数量够多，以至于耗尽了输出端口的可用内存。一旦可用内存被耗尽，要么丢弃到达的分组（采用一种叫作<strong>弃尾</strong>的策略），要么删除一个或多个已排队的分组为新来的分组腾出空间。</p>
+<p>通常的做法是：在缓存填满之前便丢弃一个分组。这样还能同时向发送方提供一个拥塞信号。</p>
+</li>
+</ul>
+</li>
+<li><p>分组调度：这个讨论的是排队的分组是如何经输出链路传输的。</p>
+<ul>
+<li><p><strong>先进先出（First-in-First-out）</strong>：如同采取同种策略的数据结构栈，按照分组到达输出链路队列的相同次序来选择分组在链路上的传输。</p>
+</li>
+<li><p><strong>优先权排队（prioity queuing）</strong>：在这个规则下，到达输出链路的分组被分类放入输出队列中的优先权类。在实践中，网络操作员可以配置一个队列，这样携带网络管理信息的分组获得超过用户流量的优先权。当选择一个一个分组传输时，优先权排队规则将从队列为非空的最高优先权类中传输一个分组。在同一优先权类内的分组之间的选择通常以FIFO方式完成。</p>
+<p>也就是说，假设分组1、3是高优先权，分组2是低优先权，到达链路的顺序是1 2 3，当分组1传输完毕后，因为2的优先权比3低，所以即使2比3先到达链路，3也比2先进行传输。</p>
+</li>
+<li><p><strong>循环排队（round robin queuing discipline）</strong>：在此规则下，分组依然像使用优先权排队那样被分类。但是在类之间不存在严格的服务优先权，循环调度器在这些类之间轮流提供服务。它同时使用所谓的<strong>保持工作排队</strong>规则，不允许链路保持空闲。若没有寻找到给定类的分组，再转移到下一个类。</p>
+</li>
+<li><p><strong>加权公平排队（weighted fair queuing, WFQ）</strong>：与循环排队有相似之处，WFQ调度器也以循环的方式为各个类提供服务，同时带有保持工作排队规则。</p>
+<p>不同之处在于，WFQ对于每个类，在任何时间间隔内可能收到不同数量的服务。具体来说就是对每个类都分配一个权值，每个类将确保接收到的服务部分等于它所拥有的权值占所有分组排队等待传输的类别的权值之和的比。</p>
+</li>
+</ul>
+</li>
+<li><p>网际协议：内容包括IPv4、IPv6以及IP编址</p>
+<ul>
+<li><p>IPv4数据报格式：</p>
+<p>①<strong>版本（号）</strong>：占4比特，规定了数据报的IP协议版本。通过查看版本号，<strong>路由器</strong>能够确定如何解释IP数据报的剩余部分。</p>
+<p>②<strong>首部长度</strong>：占4比特，用来确定IP数据报中载荷实际开始的地方。</p>
+<p>③<strong>服务类型</strong>：为了使不同类型的IP数据报能相互区别开来。</p>
+<p>④<strong>数据报长度</strong>：指示出IP数据报的总长度，以字节计。占16比特，所以说IP数据报的理论最大长度为65535字节。</p>
+<p>⑤<strong>标识、标志、片偏移</strong>：这三个字段与IP分片有关，但是在最新的IPv6中，已经不允许在路由器上对分组分片。这三个部分一共占了32比特。</p>
+<p>⑥<strong>寿命（TTL）</strong>：占8比特，用来确保数据报不会永远在网络中循环。每当有一台路由器处理该数据报时，TTL的值减1，当减为0时就丢弃该数据报。</p>
+<p>⑦<strong>协议</strong>：占8比特。指示了IP数据报的数据部分应交给哪个特定的运输层协议。例如值为6，就交给TCP；值为17，就交给UDP。IP数据报中的协议号所起到的作用类似于运输层报文段中端口号字段所起的作用。协议号是<strong>将网络层与运输层绑定到一起的黏合剂</strong>，而端口号是<strong>将运输层和应用层绑定到一起的黏合剂</strong>。</p>
+<p>⑧<strong>首部检验和</strong>：用于帮助路由器检测收到的IP数据报的比特错误。具体计算方法是：将首部中的每2个字节当作一个数，用<strong>反码</strong>算术对这些数求和。</p>
+<p>⑨<strong>源和目的IP地址</strong>：在源IP字段中插入它的IP地址，在目的IP地址中插入最终的目的地地址。</p>
+<p>⑩<strong>选址</strong>：选项字段允许IP首部被扩展。这一项在IPv4中不一定有，但在IPv6中一定没有。</p>
+<p>⑪<strong>数据</strong>：这是最重要的字段，这是数据报存在的首要理由。</p>
+</li>
+<li><p>IPv4数据报分片</p>
+<p>由于并不是所有链路层协议都能承载相同长度的网络层分组。有的协议能够承载大数据报，而有的写以只能承载小分组。一个链路层帧所能承受的最大数据量叫作<strong>最大传送单元MTU</strong>，它严格地限制着IP数据报的长度。但这对于IP数据报的传输并不是主要问题，最主要的在于发送方到目的路径上的每段链路可能使用不同的链路层协议，且每种协议可能具有不同的MTU。</p>
+<p>解决这个问题的方法是：将IP数据报中的数据分片成两个或更多个较小的数据报，用单独的链路层帧封装这些较小的IP数据报，然后通过输出链路发送这些帧。</p>
+<p>每个这些较小的数据报都称为<strong>片</strong>。</p>
+<p>对于这些片的重新组合，IPv4将这项工作放在了端系统中，而不是网络路由器中。而对片的组装就需要用到<strong>标识、标志、片偏移</strong>三个字段的信息。具体如下：</p>
+<p>①当生成一个数据报时，发送主机在为该数据报设置源和目的地址的同时贴上标识号。发送主机通常将它发送的每个数据报的标识号加1。②当某路由器需要对一个数据报分片时，形成的每个片都具有初始数据报的源地址、目的地址和标识号。③当目的地从同一发送主机收到一系列数据报时，它能够检查到数据报的标识号以确定哪些数据报实际上是同一较大数据报的片。</p>
+<p>但IP是一种不可靠的服务，就可能出现一个或多个片永远到不了目的地。所以为了让目的主机绝对的相信它已经收到了初始数据报的最后一个片，最后一个片的标志比特被置为0，而其它所有片的标志比特被设为1。同时为了确定是否丢失了片，使用偏移字段来指定该片应放在初始IP数据报的哪个位置。</p>
+</li>
+<li><p>IPv4编址：在编址前要注意一点——<strong>一个IP地址是与一个接口相关联的，而不是与包括该接口的主机或路由器相关联</strong>。</p>
+<p>它采用<strong>点分十进制记法</strong>来对IP地址进行书写。</p>
+<p>因特网的地址分配策略被称为<strong>无类别域间路由选择（即CIDR）</strong>。当使用子网寻址时，32比特的IP地址被分为两部分，并且也具有点分十进制数形式a.b.c.d/x，其中x指示了地址的第一部分中的比特数。</p>
+<p>形式为a.b.c.d/x的地址的x最高比特构成IP地址的网络部分，我们称之为<strong>网络前缀</strong>；剩下的32-x比特是用于区分该组织的内部设备的，其中的所有设备具有相同的网络前缀。简单的来说就是，前x位是<strong>网络号</strong>，用来表明这个IP地址是哪个网络的；后32-x位是主机号，用来区别主机。</p>
+<p>在CIDR之前，IP地址的编制方案采用的是<strong>分类编址</strong>，网络号被限制为长度为8、16、24比特的三种，同时将这三种划分的子网分别称为A、B和C类网络。于是乎，就能够得到三类子网所能容纳的主机数量：</p>
+<table>
+<thead>
+<tr>
+<th align="center">子网类别</th>
+<th align="center">子网主机数量</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center"><strong>A</strong></td>
+<td align="center"><strong>$2^8-2$</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>B</strong></td>
+<td align="center"><strong>$2^{16}-2$</strong></td>
+</tr>
+<tr>
+<td align="center"><strong>C</strong></td>
+<td align="center"><strong>$2^{24}-2$</strong></td>
+</tr>
+</tbody></table>
+<p>此外，还有一些特殊的地址——①255.255.255.255：广播地址；②0.0.0.0：这准确地说是一个集合——所有不清楚的主机和目的网络；③127.0.0.1：本机地址，主要用于测试；④224.0.0.1：组播地址，多用于一些特定的程序以及多媒体程序。</p>
+</li>
+</ul>
+</li>
+<li><p>一个设备是如何从某组织的地址块中分配到一个地址的？</p>
+<p>使用<strong>动态主机配置协议（DHCP，默认端口是67/68）</strong>。DHCP允许主机自动获取一个IP地址。网络管理员能够配置DHCP，以使某给定主机每次与网络连接时能得到一个相同的IP地址，或者某主机将被分配一个<strong>临时的IP地址</strong>，每次与网络连接时该地址也可能是不同的。</p>
+<p>DHCP是一个客户-服务器协议。客户通常是新到达的主机，它要获得包括自身使用的IP地址在内的网络配置信息。</p>
+<p>若一台新主机想加入一个子网，DHCP通过四个步骤来实现它的网络配置：</p>
+<ul>
+<li><strong>DHCP服务器发现</strong>：一台新到达的主机的首要任务是发现一个要与其交互的DHCP服务器。这可以通过使用<strong>DHCP发现报文</strong>来完成。客户在UDP分组中向端口67发送该报文。发送的时候，该UDP分组是封装在一个IP数据报中的，但由于主机连最基本的所连接网络的IP地址都不知道，更不用说DHCP的服务器地址了。所以就会使用到两个特殊地址：广播地址255.255.255.255和本主机源IP地址0.0.0.0——DHCP客户生成包含DHCP发现报文的IP数据报，数据报中的两个地址就是广播地址和本主机源IP地址。在链路层中，将该数据报封装成的帧广播到该子网连接的所有节点。</li>
+<li><strong>DHCP服务器提供</strong>：当DHCP服务器收到一个DHCP发现报文时，用<strong>DHCP提供报文</strong>向客户作出回应，DHCP提供报文也依然是向该子网的所有节点广播。每台服务器提供的报文内容包括：收到的发现报文的事务ID、向客户推荐的IP地址、网络掩码、IP地址租用期（即IP地址有效的时间量）。</li>
+<li><strong>DHCP请求</strong>：在子网中可能有多个DHCP服务器，新主机从这些服务器中选择一个，并向选择的服务器提供用<strong>DHCP请求报文</strong>进行响应，回显配置的参数。</li>
+<li><strong>DHCP ACK</strong>：服务器使用DHCP ACK报文对DHCP请求报文进行响应，正是所要求的参数。</li>
+</ul>
+<p>以《自顶而下》的DHCP客户-服务器交互为例：</p>
+<p>①新到达的客户先广播DHCP发现报文：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c++">src:<span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>,<span class="hljs-number">68</span><br>dest:<span class="hljs-number">255.255</span><span class="hljs-number">.255</span><span class="hljs-number">.255</span>,<span class="hljs-number">67</span><br>DHCPDISCOVER<br>yiaddr:<span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span><br>transaction ID:<span class="hljs-number">654</span><br></code></pre></td></tr></table></figure>
+
+<p>②子网中的DHCP服务器收到DHCP发现报文后，由于不知道新主机的特定IP地址，固广播DHCP提供报文</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs c++">src:<span class="hljs-number">255.1</span><span class="hljs-number">.2</span><span class="hljs-number">.5</span>,<span class="hljs-number">67</span><br>dest:<span class="hljs-number">255.255</span><span class="hljs-number">.255</span><span class="hljs-number">.255</span>,<span class="hljs-number">68</span><br>DHCPOFFER<br>yiaddr:<span class="hljs-number">223.1</span><span class="hljs-number">.2</span><span class="hljs-number">.4</span><br>transaction ID:<span class="hljs-number">654</span><br>DHCP server ID:<span class="hljs-number">233.1</span><span class="hljs-number">.2</span><span class="hljs-number">.5</span><br>Lifetime:<span class="hljs-number">3600</span> secs<br></code></pre></td></tr></table></figure>
+
+<p>③新主机收到来自DHCP服务器的提供报文后，再向DHCP服务器发送自身的一些网络参数</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs c++">src:<span class="hljs-number">0.0</span><span class="hljs-number">.0</span><span class="hljs-number">.0</span>,<span class="hljs-number">68</span><br>dest:<span class="hljs-number">255.255</span><span class="hljs-number">.255</span><span class="hljs-number">.255</span>,<span class="hljs-number">67</span><br>DHCPOFFER<br>yiaddr:<span class="hljs-number">223.1</span><span class="hljs-number">.2</span><span class="hljs-number">.4</span><br>transaction ID:<span class="hljs-number">655</span><br>DHCP server ID:<span class="hljs-number">233.1</span><span class="hljs-number">.2</span><span class="hljs-number">.5</span><br>Lifetime:<span class="hljs-number">3600</span> secs<br></code></pre></td></tr></table></figure>
+
+<p>④DHCP服务器对来自新主机的请求报文进行回应</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs c++">src:<span class="hljs-number">255.1</span><span class="hljs-number">.2</span><span class="hljs-number">.5</span>,<span class="hljs-number">67</span><br>dest:<span class="hljs-number">255.255</span><span class="hljs-number">.255</span><span class="hljs-number">.255</span>,<span class="hljs-number">68</span><br>DHCPACK<br>yiaddr:<span class="hljs-number">223.1</span><span class="hljs-number">.2</span><span class="hljs-number">.4</span><br>transaction ID:<span class="hljs-number">654</span><br>DHCP server ID:<span class="hljs-number">233.1</span><span class="hljs-number">.2</span><span class="hljs-number">.5</span><br>Lifetime:<span class="hljs-number">3600</span> secs<br></code></pre></td></tr></table></figure></li>
+<li><p><strong>IPv6</strong>：</p>
+<ul>
+<li><p>IPv6数据报格式</p>
+<p>与IPv4相比，IPv6的改进主要集中在其数据报格式中</p>
+<ul>
+<li><strong>扩大的地址容量</strong>：IPv6将IP地址长度从32比特扩大到了128比特，此外还引入了一种称为<strong>任播地址</strong>的新型地址（这种地址可以使数据报交付给一组主机中的任意一个）。</li>
+<li><strong>简化高效的40字节首部</strong></li>
+<li><strong>流标签</strong>：IPv6有一个<strong>流（flow）</strong>定义。这个字段可用于<strong>给属于特殊流的分组加上标签，这些特殊流是发送方要求进行特殊处理的流，如一种非默认服务质量或需要实时服务的流</strong>。</li>
+</ul>
+<p>它整个的数据报格式为（从头到尾）：</p>
+<ul>
+<li><strong>版本</strong>：占4比特，用于标识IP版本号。显然IPv6的这个字段就应该是6，但直接置为4并不能创建一个合法的IPv4数据报，因为其他的格式是不同的。</li>
+<li><strong>流量类型</strong>：占8比特，与IPv4中的TOS字段相似</li>
+<li><strong>流标签</strong>：占20比特，用于标识一条数据报的流，能够对一条流中的某些数据报给出优先权，或者能够用来对来自某些应用的数据报给出更高的优先权，以优化来自其他的应用。</li>
+<li><strong>有效载荷长度</strong>：占16比特，且是一个无符号整数</li>
+<li><strong>下一个首部</strong>：占8比特，用于标识数据报中的内容需要交付给哪个协议。这与IPv4首部中的协议字段值相同。</li>
+<li><strong>跳限制</strong>：占8比特，转发数据报的每台路由器将对该字段的内容减1，直到减为0就丢弃该数据报。</li>
+<li><strong>源地址和目的地址</strong>：各占128比特</li>
+<li><strong>数据</strong>：IPv6数据报的有效载荷部分</li>
+</ul>
+<p>在IPv4中出现过的<strong>分片/重新组装</strong>、<strong>首部检验和</strong>、<strong>选项</strong>几个字段在IPv6中已不复存在。</p>
+</li>
+<li><p>基于IPv4的公共因特网如何迁移到IPv6？</p>
+<p>在实践中采用最多的IPv4到IPv6的迁移方法是<strong>建隧道</strong>、<strong>双协议栈</strong>、<strong>NAT-PT（网络地址转换与协议转换）</strong>。</p>
+<p><strong>建隧道</strong>是一种封装技术，不仅仅适用于IPv6 over IPv4，还包括其他的一种协议来传输另一种协议。简单来说就是利用一种网络传输协议，将其他协议产生的数据报文封装在自身的报文中，然后在网络中传输。它是一种虚拟的点对点的连接。</p>
+<p>在IPv6 over IPv4的过程中，就是将IPv6的数据报报文整体放入IPv4数据报报文的数据字段中。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>控制平面下的路由选择算法</strong>：从发送方到接收方的过程中确定一条通过路由器网络的好的路径。对“好路径”的解释是：具有最低开销的路径。它的分类方式有三种：</p>
+<ul>
+<li><p>根据算法是集中式还是分类式：</p>
+<ul>
+<li><p><strong>集中式路由选择算法</strong>：用完整的、全局性的网络知识计算出从源到目的地之间的最低开销路径。也就是这个算法的输入是所有节点之间的连通性及所有链路的开销。从另一个方面来说就是在算法开始计算最小的路径之前，要通过某种方式来得到这些信息。</p>
+<p>具有全局状态信息的算法常被称作<strong>链路状态算法</strong>。</p>
+</li>
+<li><p><strong>分散式路由选择算法</strong>：路由器以迭代、分布式的方式计算出最低开销路径。没有节点拥有关于所有网络链路开销的完整信息，每个节点仅有与其直接相连链路的开销知识即可开始工作。然后通过迭代计算过程以及相邻节点的信息交换，一个节点逐渐计算出到达某目的节点或一组目的节点的最低开销路径。</p>
+<p>最经典的就是<strong>距离向量算法（DV算法）</strong>，这个名字的原因是每个节点维护到网络中所有其他节点的开销估计的向量。</p>
+</li>
+</ul>
+</li>
+<li><p>根据算法是静态的还是动态的：</p>
+<ul>
+<li><strong>静态路由选择算法</strong>：路由随时间的变化非常缓慢，通常是人工进行调整。</li>
+<li><strong>动态路由选择算法</strong>：随着网络流量负载或拓扑发生变化而改变路由选择路径。一个动态算法可周期性的运行或直接影响拓扑或链路开销的变化而运行。</li>
+</ul>
+</li>
+<li><p>根据它是负载敏感的还是负载迟钝的</p>
+<ul>
+<li><strong>负载敏感算法</strong>：链路开销会动态地变化以反映出底层链路的当前拥塞水平。如果当前拥塞的一条链路与高开销相联系，则路由选择算法趋向于绕开该链路来选择路由</li>
+<li><strong>负载迟钝算法</strong>：如今因特网路由选择算法如RIP、OSPF、BGP都是负载迟钝的，因为某条链路的开销不明确地反映其当前的拥塞水平。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p><strong>链路状态路由选择算法(LS算法)<strong>：在链路状态算法中，网络拓扑和所有的链路开销都是已知的，这些都是可以作为LS算法的输入。实践中，这是通过让每个节点向网络中所有其他节点广播链路状态分组来完成的，其中每个链路状态分组包含它所连接的链路的标识和开销。这些经常由</strong>链路状态广播</strong>算法来实现。</p>
+<p>节点广播的结果就是所有节点都具有该网络的统一、完整的视图。</p>
+<p>最著名的链路状态路由选择算法是<strong>Dijkstra算法</strong>，与之相密切的是<strong>Prim算法</strong>。Dijkstra算法是一种迭代算法，计算从源节点u到网络中所有其他节点的最低开销路径。k次迭代之后，就能够知道k个目的节点的最低开销路径。设置一些变量：</p>
+<ul>
+<li>D(v)：到算法的本次迭代，从源节点到目的节点v的最低开销路径的<strong>开销</strong></li>
+<li>p(v)：从源到v沿着当前最低开销路径的前一节点</li>
+<li>N`：节点子集</li>
+</ul>
+<p>算法思想如下：由一个初始化步骤和循环组成。循环执行的次数与网络中节点个数相同。一旦终止，该算法就计算出从源节点u到网络中每个其他节点的最短路径。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// 初始化</span><br>N` = &#123;u&#125;<br><span class="hljs-keyword">for</span> all nodes v<br>    <span class="hljs-keyword">if</span> v is a neighbor of u<br>        the <span class="hljs-built_in">D</span>(v) = <span class="hljs-built_in">c</span>(u, v)<br>    <span class="hljs-keyword">else</span> <span class="hljs-built_in">D</span>(v) = ∞<br>        <br><span class="hljs-comment">// 循环</span><br>Loop<br>find w <span class="hljs-keyword">not</span> in N` such that <span class="hljs-built_in">D</span>(w) is a minimum<br>add w to N`<br>update <span class="hljs-built_in">D</span>(v) <span class="hljs-keyword">for</span> each neighbor v of w <span class="hljs-keyword">and</span> <span class="hljs-keyword">not</span> in N`:<br>	<span class="hljs-built_in">D</span>(v) = <span class="hljs-built_in">min</span>(<span class="hljs-built_in">D</span>(v), <span class="hljs-built_in">D</span>(w)+<span class="hljs-built_in">c</span>(w,v))<br>until N` = N<br></code></pre></td></tr></table></figure></li>
+<li><p><strong>距离向量路由选择算法(DV算法)<strong>：这是一种迭代的、异步的、分布式的算法。</strong>分布式</strong>是因为每个节点都要从一个或多个直接相连邻居接收某些信息，执行计算，然后将计算结果分发给邻居。<strong>迭代</strong>是因为此过程一直要持续到邻居之间无更多的信息要交换为止。<strong>异步</strong>是因为它不要求所有节点相互之间步伐一致地操作。</p>
+<p>在算法之前，先提出最低开销路径与著名的Bellman-Ford相关。设$d_{x}(y)$是从节点x到节点y地最低开销路径：<br>$$<br>d_{x}(y) = min_{v}\left{ c(x,v) +  d_{v}(y)\right}<br>$$<br>这个方程还提出了在DV算法中发生的邻居到邻居通信的形式。其基本思想是：</p>
+<p>每个节点x以$D_{x}(y)$开始，对在N中的所有节点y，估计从x到y的最低开销路径的开销。令$D_{x} = [D_{x}(y):y∈N]$是节点x的距离向量，该向量是从x到在N中的所有其他节点y的开销估计向量。</p>
+<p>使用DV算法，，每个节点x维护下列路由选择信息：</p>
+<ul>
+<li>对于每个邻居v，从x到直接相连邻居v的开销为$c(x,v)$</li>
+<li>节点x的距离向量，即$D_{x} = [D_{x}(y):y∈N]$，包含了x到N中所有目的地y的开销估计值</li>
+<li>它的每个邻居的距离向量，即对x的每个邻居v，有$D_{v} = [D_{v}(y):y∈N]$​</li>
+</ul>
+<p>在DV算法中，每个节点不时地向它的每个邻居发送它的距离副本。每当节点从它的邻居那儿接收到一个新距离向量，它保存这个距离向量，并使用Bellman-Ford方程来更新它自己的距离向量。算法具体如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// 对每个节点x</span><br>Initialization:<br>	<span class="hljs-keyword">for</span> all destinations y in N:<br>		<span class="hljs-built_in">Dx</span>(y) = <span class="hljs-built_in">c</span>(x,y) <span class="hljs-comment">// if y is not a neighbor then c(x,y) = ∞</span><br>    <span class="hljs-keyword">for</span> each neighbor w<br>        <span class="hljs-built_in">Dw</span>(y) = ? <span class="hljs-keyword">for</span> all destinations y in N<br>    <span class="hljs-keyword">for</span> each neighbor w<br>        send distance vector Dx = [<span class="hljs-built_in">Dx</span>(y):y in N] to w<br>    <br>loop<br>	<span class="hljs-built_in">wait</span> (until I see a link coost change to some neighbor w <span class="hljs-keyword">or</span> until I receive a distance vector from spm nieghbirs w)<br>    <br>    <span class="hljs-keyword">for</span> each y in N<br>        <span class="hljs-built_in">Dx</span>(y) = min_v&#123;<span class="hljs-built_in">c</span>(x,v) + <span class="hljs-built_in">Dv</span>(y)&#125;<br><br><span class="hljs-keyword">if</span> <span class="hljs-built_in">Dx</span>(y) changed <span class="hljs-keyword">for</span> any destination y<br>    send distance vector Dx = [<span class="hljs-built_in">Dx</span>(y):y in N] to all neighbors<br></code></pre></td></tr></table></figure></li>
 <li></li>
 <li></li>
 </ul>
