@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      30.9k 字
+      33.3k 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      333
+      358
        分钟
     </span>
   
@@ -1278,7 +1278,99 @@
 </ul>
 <p>在DV算法中，每个节点不时地向它的每个邻居发送它的距离副本。每当节点从它的邻居那儿接收到一个新距离向量，它保存这个距离向量，并使用Bellman-Ford方程来更新它自己的距离向量。算法具体如下：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-comment">// 对每个节点x</span><br>Initialization:<br>	<span class="hljs-keyword">for</span> all destinations y in N:<br>		<span class="hljs-built_in">Dx</span>(y) = <span class="hljs-built_in">c</span>(x,y) <span class="hljs-comment">// if y is not a neighbor then c(x,y) = ∞</span><br>    <span class="hljs-keyword">for</span> each neighbor w<br>        <span class="hljs-built_in">Dw</span>(y) = ? <span class="hljs-keyword">for</span> all destinations y in N<br>    <span class="hljs-keyword">for</span> each neighbor w<br>        send distance vector Dx = [<span class="hljs-built_in">Dx</span>(y):y in N] to w<br>    <br>loop<br>	<span class="hljs-built_in">wait</span> (until I see a link coost change to some neighbor w <span class="hljs-keyword">or</span> until I receive a distance vector from spm nieghbirs w)<br>    <br>    <span class="hljs-keyword">for</span> each y in N<br>        <span class="hljs-built_in">Dx</span>(y) = min_v&#123;<span class="hljs-built_in">c</span>(x,v) + <span class="hljs-built_in">Dv</span>(y)&#125;<br><br><span class="hljs-keyword">if</span> <span class="hljs-built_in">Dx</span>(y) changed <span class="hljs-keyword">for</span> any destination y<br>    send distance vector Dx = [<span class="hljs-built_in">Dx</span>(y):y in N] to all neighbors<br></code></pre></td></tr></table></figure></li>
-<li></li>
+<li><p><strong>ISP之间的路由选择：BGP</strong></p>
+<p>BGP协议，全称为边界网关协议，是所有的AS所运行的相同的AS<strong>间</strong>路由选择协议。它异常重要，因为正是它将因特网中数以千计的ISP黏合起来。BGP是一种分布式和异步的协议，这一点与距离向量路由选择协议相同。</p>
+<ul>
+<li><p>BGP的作用：在BGP中，分组并不是路由到一个特定的目的地址，是路由到CIDR化的前缀（每个前缀表示一个子网或一个子网集合）。它为每一台路由提供一种完成以下任务的手段：</p>
+<ul>
+<li><p><strong>从邻居AS获得前缀的可达性信息</strong>：BGP允许每个子网向因特网的其余部分通告它的存在。也就是如果没有BGP，每个子网将是隔离的孤岛，它们将会是孤独的存在，不为因特网其余部分所知和所达。</p>
+<p>具体如下：</p>
+<p>对于每个AS，每台路由器要么是一台<strong>网关路由器</strong>，要么是一台<strong>内部路由器</strong>。网关路由器是一台位于AS边缘的路由器它直接连接到在其他AS中的一台或多台路由器。内部路由器仅连接在它自己AS中的主机和路由器。在BGP中，每对路由器通过使用<strong>179</strong>端口的半永久TCP连接交换路由选择信息。每条直接连接以及所有通过该连接发送的BGP报文，称为<strong>BGP连接</strong>。其中，跨越两个AS的BGP连接称为<strong>外部BGP（eBGP）连接</strong>，在相同AS中的两台路由器之间的BGP会话称为<strong>内部BGP（iBGP）连接</strong>。</p>
+</li>
+<li><p><strong>确定到该前缀的最好的路由</strong>：为了确定最好的路由，路由器将在本地运行一个BGP路由选择过程。该最好的路由将基于策略以及可达性信息来确定。</p>
+<p>具体如下：</p>
+<p>当路由器通过BGP连接通告前缀时，它在前缀中包括一些<strong>BGP属性</strong>；用BGP术语来说，前缀及其属性称为<strong>路由</strong>；AS-PATH属性包括了通告已经通过的AS的列表；NEXT-HOP是AS-PATH起始的路由器接口的IP地址。</p>
+<p>为了生成AS-PATH的值，当一个前缀通过某AS时，AS将其ASN加入AS-PATH中的现有列表。同时BGP路由器还能使用AS-PATH属性来检测和防止通告环路。</p>
+</li>
+</ul>
+</li>
+<li><p>BGP路由选择算法：</p>
+<ul>
+<li><p><strong>热土豆路由选择</strong>：选择具有最小最低开销的网关。</p>
+<p>在一台路由器转发表中对于热土都路由选择增加AS向外前缀的步骤就为：</p>
+<p>①从AS间协议学到多个网关可达子网x</p>
+<p>②使用来自AS内部协议的路由选择信息，以决定到达每个网关的最低开销路径的开销</p>
+<p>③热土豆路由选择：选择具有最小最低开销的网关</p>
+<p>④从转发表确定通往最低开销网关的接口I。在转发表中加入表项(x,I)</p>
+<p>热土豆路由选择的依据是：对于一个路由，尽可能的将分组送出其AS，并不担心其AS外部到目的地的余下部分的开销。</p>
+<p>这是一种<strong>自私</strong>的算法，因为这种算法试图减小在它自己AS中的开销，而忽略在其AS之外的端到端的开销的其他部分。</p>
+</li>
+<li><p><strong>路由器选择算法</strong>：对于任何给定的目的地前缀，进入BGP的路由选择算法的输入是到某前缀的所有路由的集合，该前缀是已被路由器学习和接受的。如果到相同的前缀有两条或多条路由，则依次调用下列消除规则直到余下一条路由：</p>
+<ul>
+<li>路由被指派一个<strong>本地偏好</strong>值作为其属性之一。本地偏好属性的值是一种策略决定，它完全取决于该AS的网络管理员。具有最高本地偏好值的路由将被选择。</li>
+<li>从余下的路由中，将选择具有最短AS-PATH的路由。如果该规则是路由选择的唯一规则，则BGP将使用距离向量算法来决定路径，其中距离测度使用AS跳的跳数而不是路由器跳的跳数。</li>
+<li>从余下的路由中使用热土豆路由选择，即选择具有最靠近NEXT-HOP路由器的路由</li>
+<li>如果还余留有多条路由，该路由器使用BGP标识符来选择路由。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>BGP实现的IP任播：这种服务通常用于DNS中。IP任播主要服务于①在许多分散的不同地理位置，替换不同服务器上的相同内容；②让每个用户从最靠近的服务器访问内容。</p>
+</li>
+</ul>
+</li>
+<li><p>SDN控制平面：控制分组在网络的SDN使能设备中转发的网络范围逻辑，以及这些设备和它们的服务的配置与管理。SDN体系结构有四个关键特征：</p>
+<ul>
+<li><strong>基于流的转发</strong>：SDN控制的交换机的分组转发工作，能够基于运输层、网络层或链路层首部中任意数量的首部字段进行转发。SDN控制平面的工作是计算、管理和安装所有网络交换机中的流表项。</li>
+<li><strong>数据平面与控制平面分离</strong>：数据平面由网络交换机组成，控制平面由服务器以及决定和管理交换机流表项的组成。</li>
+<li><strong>网络控制功能</strong>：位于数据平面交换机外部。控制平面自身有两个组件组成：一个SDN控制器和若干网络控制应用程序。</li>
+<li><strong>可编程的网络</strong>：网络的可编程性是通过运行在控制平面中的网络控制应用程序来实现。</li>
+</ul>
+<p>SDN表示了一种意义重大的网络功能的“分类”，即数据平面交换机、SDN控制器和网络控制应用程序是分离的实体。</p>
+<p>SDN控制平面大体划分为两个部分：SDN控制器和SDN网络控制应用程序。</p>
+<ul>
+<li><p>SDN控制器大体分为3个层次：</p>
+<ul>
+<li><strong>通信层</strong>：SDN控制器和受控网络设备之间的通信。通过OpenFlow或者SNMP等协议能够实现传送控制器与SDN使能交换机、主机或其他设备之间的信息。这些协议构成了控制器体系结构的最底层。控制器与受控设备之间的通信跨越了一个接口，被称为控制器的<strong>“南向”接口</strong>。</li>
+<li><strong>网络范围状态管理层</strong>：有SDN控制平面所做出的最终控制决定，将要求控制器具有有关网络的主机、链路、交换机和其他SDN控制设备的最新状态信息。</li>
+<li><strong>对于网络控制应用程序层的接口</strong>：控制器通过它的<strong>“北向“接口</strong>与网络控制应用程序交互。该API允许网络控制应用程序在状态管理层之间读/写网络状态和流表。</li>
+</ul>
+</li>
+<li><p>OpenFlow协议：</p>
+<p>运行在TCP之上，使用6653的默认端口号。OpenFlow的报文种类有：</p>
+<p>①从控制器到受控交换机流动的重要报文：</p>
+<ul>
+<li><strong>配置</strong>：允许控制器查询并设置交换机的配置参数</li>
+<li><strong>修改状态</strong>：由控制器所使用，以增加/删除或修改交换机流表中的表项，并设置交换机端口特性</li>
+<li><strong>读状态</strong>：被控制器用于从交换机的流表和端口收集统计数据和计数器值</li>
+<li><strong>发送分组</strong>：被控制器用于在受控交换机从特定的端口发送出一个特定的报文</li>
+</ul>
+<p>②从受控交换机到控制器流动的重要报文：</p>
+<ul>
+<li><strong>流删除</strong>：通知控制器已删除一个流表项</li>
+<li><strong>端口状态</strong>：交换机使用该报文向控制器通知端口状态的变化</li>
+<li><strong>分组入</strong>：被用于将分组发送给控制器。</li>
+</ul>
+</li>
+<li><p>ICMP协议：</p>
+<p>ICMP最典型的用途是差错报文。通常将ICMP视为IP的一部分，但在体系上，却又高于IP一级，因ICMP报文时作为IP有效载荷承载的。</p>
+<p>经典的Traceroute程序就是使用的ICMP报文。</p>
+</li>
+<li><p>网络管理和SNMP：</p>
+<ul>
+<li>网络管理框架：<ul>
+<li><strong>管理服务器</strong>：是执行网络管理活动的地方，控制网络管理信息的收集、处理、分析和显示</li>
+<li><strong>被管设备</strong>：网络装备的一部分，位于被管理的网络中。</li>
+<li><strong>管理信息库（MIB）</strong>：一个被管设备中的每个被管对象的关联信息都收集在MIB中，这些信息的值是供管理服务器所用的。</li>
+<li><strong>网络管理代理</strong>：是运行在被管设备中的一个<strong>进程</strong>，该进程与管理服务器通信，在管理服务器的命令和控制下在被管设备中采取本地动作。</li>
+<li><strong>网络管理协议</strong>：该协议运行在管理服务器和被管设备之间，允许管理服务器查询被管设备的状态，并经过其代理间接地在这些设备上采取行动。代理能够使用网络管理协议向管理服务器通知异常事件。网络管理协议是不能自己管理网络的，它只能使网络管理员有能力去管理网络。</li>
+</ul>
+</li>
+<li>SNMP：简单网络管理协议，这是一个应用层协议，用于管理服务器和代表管理服务器执行的代理之间传递网络管理控制和信息报文。</li>
+</ul>
+</li>
+</ul>
+</li>
 <li></li>
 </ul>
 
