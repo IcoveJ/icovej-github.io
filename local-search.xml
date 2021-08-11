@@ -11,13 +11,19 @@
     <content type="html"><![CDATA[]]></content>
     
     
+    <categories>
+      
+      <category>学习笔记/C++</category>
+      
+    </categories>
+    
     
   </entry>
   
   
   
   <entry>
-    <title>C++11学习：namespace</title>
+    <title>C++学习：namespace</title>
     <link href="/2021/08/11/C-%E5%AD%A6%E4%B9%A0%EF%BC%9Anamespace/"/>
     <url>/2021/08/11/C-%E5%AD%A6%E4%B9%A0%EF%BC%9Anamespace/</url>
     
