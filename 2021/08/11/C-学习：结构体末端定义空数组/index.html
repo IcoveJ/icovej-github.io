@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      0 字
+      441 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      1
+      4
        分钟
     </span>
   
@@ -228,7 +228,22 @@
             <h1 style="display: none">C++学习：结构体末端定义空数组</h1>
             
             <div class="markdown-body">
-              
+              <p>在阅读muduo代码的过程中发现了一个末端定义空数组的结构体：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">PayloadMessage</span></span><br><span class="hljs-class">&#123;</span><br>  <span class="hljs-keyword">int32_t</span> length;<br>  <span class="hljs-keyword">char</span> data[<span class="hljs-number">0</span>];<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>陈硕老师对其的讲解是：这个长度为0的数组在C语言中是用来表面这个数组的长度是在运行时决定的，分配多少内存，这个数组就有多长。</p>
+<p>这个结构体的使用是：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs c++">PayloadMessage* payload = <span class="hljs-keyword">static_cast</span>&lt;PayloadMessage*&gt;(::<span class="hljs-built_in">malloc</span>(total_len));<br><span class="hljs-comment">//total_len是报文的长度，类型为const int</span><br></code></pre></td></tr></table></figure>
+
+<p>以前也见过类似的写法，但并未深究，所以这次遇见了选择深入学习一下。</p>
+<p>这是一种广泛使用的几千，常常用来构造缓冲区，尤其是在嵌入式开发中经常使用，与指针相比，它的优势在于：</p>
+<p>①不需要初始化，因为数组的名就是缓冲区数据的起始地址；</p>
+<p>②空数组不占任何空间，而指针不管是否为空，至少都会占4字节的空间。</p>
+<p>由于空数组不占任何的内存空间，就使得在计算结构体的size时，它并不会被计算入内。</p>
+<p>同时若是使用指针，那么再分配内存缓冲区时，就必须分配结构体一次，同时为结构体内的指针分配一次，这样就会产生很麻烦的后果：结构体的内存地址与指针地址是不连续的，申请与释放就需要分别管理吗，并且必须先释放结构体的指针，再释放结构体，次序是不能够颠倒的。</p>
+<p>反过来使用数组，就只需要释放一次。</p>
+<p>简单来说这种技巧就是分配一段连续的内存，来减少内存的碎片化。</p>
+
             </div>
             <hr>
             <div>
