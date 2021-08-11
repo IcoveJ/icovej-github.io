@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      729 字
+      741 字
     </span>
   
 
@@ -252,7 +252,7 @@
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-keyword">namespace</span> A&#123;<br>    <span class="hljs-keyword">int</span> a = <span class="hljs-number">10</span>;<br>    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">f</span><span class="hljs-params">()</span></span>;<br>    <span class="hljs-keyword">namespace</span> B&#123;<br>        <span class="hljs-keyword">int</span> b = <span class="hljs-number">20</span>;<br>    &#125;<br>&#125;<br><br><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">A::f</span><span class="hljs-params">()</span></span>&#123;<span class="hljs-comment">// 函数定义需要表明所在域，</span><br>    cout &lt;&lt; a &lt;&lt; endl;<span class="hljs-comment">// a与f在同一个域中</span><br>    cout &lt;&lt; B::b &lt;&lt; endl;<span class="hljs-comment">// b与f不在同一个域中就需要声明所使用变量的域</span><br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>⑥无名命名空间，意味着命名空间中的标识符只能在本文件内访问，相当于给这个标识符加上了static，使得其可以作为内部连接</p>
-<p>⑦命名空间之间可以相互赋值，赋值过程也可以在某一个域内，不强求一定是全局的过程。</p>
+<p>⑦命名空间之间可以相互赋值，赋值过程也可以在某一个域内，不强求一定是全局的过程。赋值的结果就是完全的复制。</p>
 
             </div>
             <hr>
