@@ -18,9 +18,25 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-  <title>归档 - Icove&#39;s Home</title>
+  <title>服务器开发（一）分布式、多线程、高并发 - Icove&#39;s Home</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
+
+
+  <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/github-markdown-css@4.0.0/github-markdown.min.css" />
+  <link  rel="stylesheet" href="/lib/hint/hint.min.css" />
+
+  
+    
+    
+      
+      <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@10.7.2/styles/github-gist.min.css" />
+    
+  
+
+  
+    <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.css" />
+  
 
 
 
@@ -48,7 +64,7 @@
 
 
 <body>
-  <header style="height: 60vh;">
+  <header style="height: 70vh;">
     <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
   <div class="container">
     <a class="navbar-brand"
@@ -147,9 +163,46 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="归档">
+            <span class="h2" id="subtitle" title="服务器开发（一）分布式、多线程、高并发">
               
             </span>
+
+            
+              <div class="mt-3">
+  
+  
+    <span class="post-meta">
+      <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+      <time datetime="2021-08-13 19:47" pubdate>
+        2021年8月13日 晚上
+      </time>
+    </span>
+  
+</div>
+
+<div class="mt-1">
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-chart"></i>
+      900 字
+    </span>
+  
+
+  
+    
+    <span class="post-meta mr-2">
+      <i class="iconfont icon-clock-fill"></i>
+      
+      
+      9
+       分钟
+    </span>
+  
+
+  
+  
+</div>
 
             
           </div>
@@ -162,40 +215,123 @@
 
   <main>
     
-      <div class="container nopadding-x-md">
-        <div class="py-5" id="board"
-          >
-          
-          <div class="container">
-            <div class="row">
-              <div class="col-12 col-md-10 m-auto">
-                
-
-<div class="list-group">
-  <p class="h4">共计 7 篇文章</p>
-  <hr>
-  
-  
-    
       
-      <p class="h5">2021</p>
-    
-    <a href="/2021/07/15/%E8%AE%A1%E7%BD%91-%E8%87%AA%E9%A1%B6%E8%80%8C%E4%B8%8B-%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="list-group-item list-group-item-action">
-      <span class="archive-post-title">计网-自顶而下-学习笔记</span>
-      <time style="float: right;">07-15</time>
-    </a>
-  
-</div>
 
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="d-none d-lg-block col-lg-2"></div>
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div class="py-5" id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">服务器开发（一）分布式、多线程、高并发</h1>
+            
+            <div class="markdown-body">
+              <p>在尝试着做服务器方面的项目开发，之前也对分布式、高并发、多线程有过一定的了解，但并未有过系统的认识，固去做深入的理解，并记录。</p>
+<h1 id="1、分布式系统"><a href="#1、分布式系统" class="headerlink" title="1、分布式系统"></a>1、分布式系统</h1><p>分布式系统在上世纪末期就被提出，后被Google发扬光大，熟悉的MapReduce、BigTable等都是基于的分布式系统。</p>
+<p>什么是分布式系统？在网上看到过两个比较好的解释：</p>
+<p>①a system with multiple components located on different machines that communicate and coordinate actions in order to appear as a single coherent system to the end-user.</p>
+<p>②A distributed system is a system which has unbounded latency and experiences partial failure.</p>
+<p>个人认为这两句话将分布式系统的特点都很清晰地进行了解释。</p>
+<p>在第一种解释中，分布式系统简单来说就是对一个终端用户而言，这个系统虽然是通过多个分布在不同机器上的组件通力合作实现的，但它看起来就是一个机器在工作。</p>
+<p>在第二种解释中，分布式系统的各个组件之间是存在不确定的延迟的，并且其中的一些组件还可能宕机。</p>
+<p>于是我们就能得到分布式系统的几个重要特点：</p>
+<ul>
+<li>分布性</li>
+<li>对等性：分布式系统中的计算机是没有主从之分的，没有绝对的控制与被控制</li>
+<li>故障总是会发生</li>
+</ul>
+<p>此外，他还有两个重要的特性：并发性和缺乏全局时钟</p>
+<p>分布式存在的意义是什么？或者说为什么要用它呢？</p>
+<p>分布式系统的提出主要是解决集中式系统三个方面的不足：系统复杂性、可拓展性、容错性。</p>
+<p>它有两种工作方式：</p>
+<ul>
+<li>分布式系统的每个机器都朝着同一个目标工作，终端用户将其视为一个结果</li>
+<li>每个机器都有自己的终端用户，也就是说终端用户的个数不再是一个，此时分布式系统起共享资源或通信服务的作用</li>
+</ul>
+<p>第二种工作方式最经典的例子就是CS（Client/Server）模型。</p>
+<h1 id="2、高并发"><a href="#2、高并发" class="headerlink" title="2、高并发"></a>2、高并发</h1><p>在分布式中提到过分布式系统有一个重要的特性是并发性。高并发就是指一中系统在运行过程中遇到的“短时间内遇到大量请求操作”的情况，经常出现在web系统中，例如双十一的电商平台、遭遇抢票时的12306等。也就是说，高并发就代表着大流量。</p>
+<p>它的处理指标通常有：</p>
+<ul>
+<li>响应时间（Response Time）：系统对请求做出的响应时间。</li>
+<li>吞吐量（Throughput）：单位时间内处理的请求数量。</li>
+<li>每秒查询率QPS（Query Per Second）：每秒响应请求数。</li>
+<li>并发用户数：同时承载正常使用系统功能的用户数量。</li>
+</ul>
+<h1 id="3、多线程"><a href="#3、多线程" class="headerlink" title="3、多线程"></a>3、多线程</h1><p>先声明，多线程<strong>不等于</strong>高并发。</p>
+<p>多线程是一种处理并发的技术，旨在从软件<strong>或</strong>硬件上实现多个线程并发执行的技术，解决的是CPU调度多个线程的问题。</p>
+<p>线程一共有六个状态：新建、运行、阻塞、等待、计时等待和终止。但给定一个时间点，线程只能有一种状态。</p>
+<p>多线程就能够实现：</p>
+<ul>
+<li>更高的运行效率</li>
+<li>模块化的编程</li>
+<li>更小的创建和切换开销</li>
+<li>更方便的通信</li>
+<li>更简洁化的程序结构和更高的资源利用率</li>
+</ul>
 
-
-
-
-              </div>
             </div>
-          </div>
+            <hr>
+            <div>
+              <div class="post-metas mb-3">
+                
+                  <div class="post-meta mr-3">
+                    <i class="iconfont icon-category"></i>
+                    
+                      <a class="hover-with-bg" href="/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%BC%80%E5%8F%91/">服务器开发</a>
+                    
+                  </div>
+                
+                
+              </div>
+              
+                <p class="note note-warning">
+                  
+                    本博客所有文章除特别声明外，均采用 <a target="_blank" href="https://creativecommons.org/licenses/by-sa/4.0/deed.zh" rel="nofollow noopener noopener">CC BY-SA 4.0 协议</a> ，转载请注明出处！
+                  
+                </p>
+              
+              
+                <div class="post-prevnext">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2021/08/11/C-%E5%AD%A6%E4%B9%A0%EF%BC%9A%E5%8D%95%E5%8F%8C%E5%86%92%E5%8F%B7%E7%9A%84%E7%94%A8%E6%B3%95/">
+                        <span class="hidden-mobile">C++学习：单双冒号的用法</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
         </div>
       </div>
+    </div>
+    
+      <div class="d-none d-lg-block col-lg-2 toc-container" id="toc-ctn">
+        <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+      </div>
+    
+  </div>
+</div>
+
+<!-- Custom -->
+
+
     
 
     
@@ -275,9 +411,15 @@
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/tocbot@4.12.3/dist/tocbot.min.js" ></script>
 
 
 
+  <script  src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@3.5.7/dist/jquery.fancybox.min.js" ></script>
+
+
+
+  <script  src="https://cdn.jsdelivr.net/npm/anchor-js@4.3.1/anchor.min.js" ></script>
 
 
 

@@ -4,6 +4,25 @@
   
   
   <entry>
+    <title>服务器开发（一）分布式、多线程、高并发</title>
+    <link href="/2021/08/13/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%BC%80%E5%8F%91%EF%BC%88%E4%B8%80%EF%BC%89%E5%88%86%E5%B8%83%E5%BC%8F%E3%80%81%E5%A4%9A%E7%BA%BF%E7%A8%8B%E3%80%81%E9%AB%98%E5%B9%B6%E5%8F%91/"/>
+    <url>/2021/08/13/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%BC%80%E5%8F%91%EF%BC%88%E4%B8%80%EF%BC%89%E5%88%86%E5%B8%83%E5%BC%8F%E3%80%81%E5%A4%9A%E7%BA%BF%E7%A8%8B%E3%80%81%E9%AB%98%E5%B9%B6%E5%8F%91/</url>
+    
+    <content type="html"><![CDATA[<p>在尝试着做服务器方面的项目开发，之前也对分布式、高并发、多线程有过一定的了解，但并未有过系统的认识，固去做深入的理解，并记录。</p><h1 id="1、分布式系统"><a href="#1、分布式系统" class="headerlink" title="1、分布式系统"></a>1、分布式系统</h1><p>分布式系统在上世纪末期就被提出，后被Google发扬光大，熟悉的MapReduce、BigTable等都是基于的分布式系统。</p><p>什么是分布式系统？在网上看到过两个比较好的解释：</p><p>①a system with multiple components located on different machines that communicate and coordinate actions in order to appear as a single coherent system to the end-user.</p><p>②A distributed system is a system which has unbounded latency and experiences partial failure.</p><p>个人认为这两句话将分布式系统的特点都很清晰地进行了解释。</p><p>在第一种解释中，分布式系统简单来说就是对一个终端用户而言，这个系统虽然是通过多个分布在不同机器上的组件通力合作实现的，但它看起来就是一个机器在工作。</p><p>在第二种解释中，分布式系统的各个组件之间是存在不确定的延迟的，并且其中的一些组件还可能宕机。</p><p>于是我们就能得到分布式系统的几个重要特点：</p><ul><li>分布性</li><li>对等性：分布式系统中的计算机是没有主从之分的，没有绝对的控制与被控制</li><li>故障总是会发生</li></ul><p>此外，他还有两个重要的特性：并发性和缺乏全局时钟</p><p>分布式存在的意义是什么？或者说为什么要用它呢？</p><p>分布式系统的提出主要是解决集中式系统三个方面的不足：系统复杂性、可拓展性、容错性。</p><p>它有两种工作方式：</p><ul><li>分布式系统的每个机器都朝着同一个目标工作，终端用户将其视为一个结果</li><li>每个机器都有自己的终端用户，也就是说终端用户的个数不再是一个，此时分布式系统起共享资源或通信服务的作用</li></ul><p>第二种工作方式最经典的例子就是CS（Client/Server）模型。</p><h1 id="2、高并发"><a href="#2、高并发" class="headerlink" title="2、高并发"></a>2、高并发</h1><p>在分布式中提到过分布式系统有一个重要的特性是并发性。高并发就是指一中系统在运行过程中遇到的“短时间内遇到大量请求操作”的情况，经常出现在web系统中，例如双十一的电商平台、遭遇抢票时的12306等。也就是说，高并发就代表着大流量。</p><p>它的处理指标通常有：</p><ul><li>响应时间（Response Time）：系统对请求做出的响应时间。</li><li>吞吐量（Throughput）：单位时间内处理的请求数量。</li><li>每秒查询率QPS（Query Per Second）：每秒响应请求数。</li><li>并发用户数：同时承载正常使用系统功能的用户数量。</li></ul><h1 id="3、多线程"><a href="#3、多线程" class="headerlink" title="3、多线程"></a>3、多线程</h1><p>先声明，多线程<strong>不等于</strong>高并发。</p><p>多线程是一种处理并发的技术，旨在从软件<strong>或</strong>硬件上实现多个线程并发执行的技术，解决的是CPU调度多个线程的问题。</p><p>线程一共有六个状态：新建、运行、阻塞、等待、计时等待和终止。但给定一个时间点，线程只能有一种状态。</p><p>多线程就能够实现：</p><ul><li>更高的运行效率</li><li>模块化的编程</li><li>更小的创建和切换开销</li><li>更方便的通信</li><li>更简洁化的程序结构和更高的资源利用率</li></ul>]]></content>
+    
+    
+    <categories>
+      
+      <category>服务器开发</category>
+      
+    </categories>
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>C++学习：单双冒号的用法</title>
     <link href="/2021/08/11/C-%E5%AD%A6%E4%B9%A0%EF%BC%9A%E5%8D%95%E5%8F%8C%E5%86%92%E5%8F%B7%E7%9A%84%E7%94%A8%E6%B3%95/"/>
     <url>/2021/08/11/C-%E5%AD%A6%E4%B9%A0%EF%BC%9A%E5%8D%95%E5%8F%8C%E5%86%92%E5%8F%B7%E7%9A%84%E7%94%A8%E6%B3%95/</url>
