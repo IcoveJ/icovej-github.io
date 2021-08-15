@@ -237,7 +237,7 @@
 </ul>
 <h1 id="1、模型选择"><a href="#1、模型选择" class="headerlink" title="1、模型选择"></a>1、模型选择</h1><p>在这个项目中我使用的是select模型，而不是传统的C/S模型，也不是多路复用中的其他几种模型（poll、epoll等）。因为它基本解决了C/S模型中accept()、recv()、send()等阻塞的问题。</p>
 <p>相较于C/S模型，select模型的好处在于单个process能够同时处理多个网络连接的IO。基本原理就是select函数能够不断地去<strong>轮询</strong>所负责的所有socket，一旦某个socket有数据到达了，就去通知用户process去调用read操作，将数据从kernel拷贝到用户process。</p>
-<p><img src="/images/select01.png" srcset="/img/loading.gif" lazyload alt="select01"></p>
+<p><img src="/.io//select01.png" srcset="/img/loading.gif" lazyload alt="select01"></p>
 <p>正如图例所示：用户先将需要进行IO操作的socket添加到select中，然后阻塞等待select系统调用返回。有数据到达时，socket被激活，select函数返回。用户process正式发起read请求，从kernel中读取数据并放回用户process中。</p>
 <p>从这个流程上来看，使用select函数来进行IO操作似乎与同步阻塞没啥区别，甚至select还需要监视更多的socket从而导致效率变差。但这个缺点也正是它的最大优势：同时处理多个socket的IO请求。也就是能够达到同一线程内同时处理多个IO请求。</p>
 <p>select函数在Windos中的&lt;WinSock.h&gt;下，linux中的&lt;sys/select.h&gt;下，其API为：</p>
