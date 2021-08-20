@@ -18,7 +18,7 @@
   <meta name="author" content="John Doe">
   <meta name="keywords" content="">
   
-  <title>服务器开发（四）基于select的小型聊天编程③ - Icove&#39;s Home</title>
+  <title>服务器开发（五）网络编程第一个阶段性总结 - Icove&#39;s Home</title>
 
   <link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" />
 
@@ -163,7 +163,7 @@
       <div class="full-bg-img">
         <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
           <div class="page-header text-center fade-in-up">
-            <span class="h2" id="subtitle" title="服务器开发（四）基于select的小型聊天编程③">
+            <span class="h2" id="subtitle" title="服务器开发（五）网络编程第一个阶段性总结">
               
             </span>
 
@@ -173,8 +173,8 @@
   
     <span class="post-meta">
       <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-      <time datetime="2021-08-19 15:17" pubdate>
-        2021年8月19日 下午
+      <time datetime="2021-08-19 22:26" pubdate>
+        2021年8月19日 晚上
       </time>
     </span>
   
@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      701 字
+      1.7k 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      9
+      18
        分钟
     </span>
   
@@ -225,22 +225,98 @@
         <div class="py-5" id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">服务器开发（四）基于select的小型聊天编程③</h1>
+            <h1 style="display: none">服务器开发（五）网络编程第一个阶段性总结</h1>
             
             <div class="markdown-body">
-              <p>这也是这个项目的最后一部分了——这个聊天程序的客户端部分。相较于服务端，客户端就简单得多了。</p>
-<p>整个代码的主体我就只分为了两个部分：客户端初始化函数和析构函数</p>
-<p>首先来看客户端初始化函数：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">initial</span><span class="hljs-params">()</span> </span>&#123;<br>    <span class="hljs-comment">//1 请求协议版本</span><br>    WSADATA wsaData;<br>    <span class="hljs-built_in">WSAStartup</span>(<span class="hljs-built_in">MAKEWORD</span>(<span class="hljs-number">2</span>, <span class="hljs-number">2</span>), &amp;wsaData);<br>    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">LOBYTE</span>(wsaData.wVersion) != <span class="hljs-number">2</span> ||<br>        <span class="hljs-built_in">HIBYTE</span>(wsaData.wVersion) != <span class="hljs-number">2</span>) &#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;请求协议版本失败!\n&quot;</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    &#125;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;请求协议成功!\n&quot;</span>);<br><br>    <span class="hljs-comment">//2 创建socket</span><br>    chat_client = <span class="hljs-built_in">socket</span>(AF_INET, SOCK_STREAM, IPPROTO_TCP);<br>    <span class="hljs-keyword">if</span> (chat_client == SOCKET_ERROR) &#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;创建socket失败!\n&quot;</span>);<br>        <span class="hljs-built_in">WSACleanup</span>();<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-2</span>;<br>    &#125;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;创建socket成功!\n&quot;</span>);<br><br>    <span class="hljs-comment">//3 获取服务器协议地址族</span><br>    sockaddr_in addr = &#123; <span class="hljs-number">0</span> &#125;;<br>    addr.sin_family = AF_INET;<span class="hljs-comment">//协议版本</span><br>    addr.sin_addr.S_un.S_addr = <span class="hljs-built_in">inet_addr</span>(<span class="hljs-string">&quot;192.168.117.1&quot;</span>);<span class="hljs-comment">//绑定的是服务器的ip</span><br>    addr.sin_port = <span class="hljs-built_in">htons</span>(<span class="hljs-number">8000</span>);<span class="hljs-comment">//0 - 65535     10000左右</span><br>    <span class="hljs-comment">//os内核 和其他程序  会占用掉一些端口   80  23  </span><br><br>    <span class="hljs-comment">//4 连接服务器</span><br>    <span class="hljs-keyword">int</span> c = <span class="hljs-built_in">connect</span>(chat_client, (sockaddr*)&amp;addr, <span class="hljs-keyword">sizeof</span> addr);<br>    <span class="hljs-keyword">if</span> (c == <span class="hljs-number">-1</span>) &#123;<br>        <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;连接服务器失败!\n&quot;</span>);<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">-1</span>;<br>    &#125;<br>    <span class="hljs-built_in">printf</span>(<span class="hljs-string">&quot;连接服务器成功!\n&quot;</span>);<br>    std::future&lt;<span class="hljs-keyword">bool</span>&gt;f = std::<span class="hljs-built_in">async</span>(&amp;chat_client::outTime,<span class="hljs-keyword">this</span>);<br>    <span class="hljs-keyword">if</span> (!f.<span class="hljs-built_in">get</span>()|| !<span class="hljs-built_in">login</span>()) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>    &#125;<br>    <span class="hljs-function">std::thread <span class="hljs-title">t</span><span class="hljs-params">(&amp;chat_client::chat_client, <span class="hljs-keyword">this</span>)</span></span>;<br>    <span class="hljs-keyword">while</span> (<span class="hljs-number">1</span>) &#123;<br>        <span class="hljs-keyword">if</span> (flag) &#123;<span class="hljs-comment">//收到服务器断开的消息</span><br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>        string buff;<br>        cout &lt;&lt; <span class="hljs-string">&quot;想说点什么:&quot;</span>;<br>        std::<span class="hljs-built_in">getline</span>(std::cin, buff);<br>        <span class="hljs-keyword">if</span> (buff == <span class="hljs-string">&quot;quit&quot;</span>) &#123;<br>            flag = <span class="hljs-literal">true</span>;<span class="hljs-comment">//准备让接收的线程也退出来。</span><br><br>            <span class="hljs-keyword">break</span>;<br>        &#125;<br>        <span class="hljs-built_in">send</span>(chat_client, buff.<span class="hljs-built_in">c_str</span>(), <span class="hljs-keyword">static_cast</span>&lt;<span class="hljs-keyword">int</span>&gt;(buff.<span class="hljs-built_in">size</span>()), <span class="hljs-number">0</span>);<br>    &#125;<br>    <span class="hljs-keyword">if</span> (t.<span class="hljs-built_in">joinable</span>()) &#123;<br>        t.<span class="hljs-built_in">join</span>();<span class="hljs-comment">//等待线程退出</span><br>    &#125;<br><br>    cout &lt;&lt; <span class="hljs-string">&quot;已断开连接&quot;</span> &lt;&lt; endl;<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+              <p>做一下自己对这个小项目的技术总结：</p>
+<ul>
+<li><p>因为这个小项目是基于的TCP，所以就先聊聊TCP。</p>
+<p>TCP的网络模型其实是很简单的，下面这张图网上一找一大把：</p>
+<p><img src="/2021/08/19/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%94%EF%BC%89%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E7%AC%AC%E4%B8%80%E4%B8%AA%E9%98%B6%E6%AE%B5%E6%80%A7%E6%80%BB%E7%BB%93/MyBlog\hexo\source\images\服务器开发（五）网络编程第一个阶段性总结\01.jpg" srcset="/img/loading.gif" lazyload alt="01"></p>
+<p>很清晰地阐释了服务端和客户端究竟干了什么，也很清晰的指示了在写代码过程中我们该怎么去写。除非完全是去实现所有的底层，其余的无外乎是调用各个库的接口。</p>
+<p>主要的还是在写代码过程中遇到的，比如超时等问题的解决。</p>
+</li>
+<li><p>socket究竟是什么东西？</p>
+<p>其实socket在我刚写这个项目代码或者刚学网络编程的时候一直没有理解，包括我在内外网上查资料也一直没理解透，始终迷迷糊糊的，尽管我是将《自顶而下》是看完了的（然而笔记到现在都没写完）！</p>
+<p>所以我不得不再次再次翻出这本书，结合《图解TCP/IP》来将其理解。</p>
+<p>在经典的OSI参考模型中，整个网络被分为了七层，从上而下分别为：<strong>应用层</strong>、<strong>表示层</strong>、<strong>会话层</strong>、<strong>传输层</strong>、<strong>网络层</strong>、<strong>数据链路层</strong>、<strong>物理层</strong>。从另一个方面理解，可以将其分为三层：<strong>应用程序</strong>（包括应用层、表示层、会话层）、<strong>操作系统</strong>（包括传输层、网络层）、设<strong>备驱动程序与网络接口</strong>（数据链路层、物理层）。</p>
+<p>根据这些层，我们就能看到在各层之间数据是怎样使用对应层的协议进行的传输：</p>
+<pre><code class=" mermaid">graph TD
+A[用户进程]--&gt;E[TCP]--&gt;H[IP]
+B[用户进程]--&gt;F[UDP]--&gt;H[IP]
+C[用户进程]--&gt;G[ICMP]--&gt;H[IP]
+D[用户进程]--&gt;H[IP]
+I[IGMP]--&gt;H[IP]
+H[IP]--&gt;J[硬件接口]
+J[硬件接口]--&gt;K[媒体]
+L[ARP]--&gt;J[硬件接口]
+M[RARP]--&gt;J[硬件接口]
+</code></pre>
 
-<p>前三个步骤就不再多说了，基本上每一个TCP/UDP的网络编程，无论是客户端还是服务端都是这几个步骤。</p>
-<p>直接说说与服务器连接成功后的操作。</p>
-<p>①第一个操作是：使用关键字<code>async</code>来异步处理可能出现的超时问题，这里我将超时直接封装成了一个函数<code>outTime</code>，具体实现也没啥大的差异：</p>
-<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">bool</span> <span class="hljs-title">outTime</span><span class="hljs-params">()</span> </span>&#123;<br>	fd_set fd = &#123; <span class="hljs-number">0</span> &#125;;<br>	<span class="hljs-built_in">FD_ZERO</span>(&amp;fd);<br>	<span class="hljs-built_in">FD_SET</span>(chat_client, &amp;fd);<br>	timeval st;<br>	st.tv_sec = <span class="hljs-number">0</span>;<br>	st.tv_usec = <span class="hljs-number">6000</span>;<br>	<span class="hljs-keyword">if</span> (<span class="hljs-built_in">select</span>(<span class="hljs-number">0</span>, &amp;fd,&amp;fd,&amp;fd,&amp;st) == <span class="hljs-number">0</span>) &#123;<br>		cout &lt;&lt; <span class="hljs-string">&quot;超时&quot;</span> &lt;&lt; endl;<br>		<span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>	&#125;<br>	<span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这么看起来依然不知道socket是什么以及在哪儿起的作用。</p>
+<p>在维基百科上对socket的解释是：一种操作系统提供的进程间的通信机制——是网络环境中进程间通信的API。应用程序通过它发送或接收数据。通俗点说我们可以将其理解为每一家的门牌号。快递外卖等通过门牌号将东西送至对应的家庭，程序等也就是通过socket将数据送至对应的主机进程。当然这时的socket肯定就包含这台主机进程的IP+端口号。</p>
+<p>于是我们就能在上面的数据传输图中加入socket</p>
+<pre><code class=" mermaid">graph TD
+I[IGMP]--&gt;H[IP]
+H[IP]--&gt;J[硬件接口]
+J[硬件接口]--&gt;K[媒体]
+L[ARP]--&gt;J[硬件接口]
+M[RARP]--&gt;J[硬件接口]
+A[用户进程]--&gt;N[socket]--&gt;G[ICMP]--&gt;H[IP]
+B[用户进程]--&gt;N[socket]--&gt;E[TCP]--&gt;H[IP]
+C[用户进程]--&gt;N[socket]--&gt;F[UDP]--&gt;H[IP]
+D[用户进程]--&gt;N[socket]
+</code></pre>
 
-<p>创建异步实际上就是创建了一个新的线程来执行相关的操作嘛。</p>
-<p>②第二个操作：登录<code>login()</code>。在登录操作中输入登录账号和密码通过套接字传输后，两个输入是在同一个套接字中进行的传输；并且在<code>login()</code>中接收来自服务端的确认信号。</p>
-<p>③第三个操作：也是最后一个操作，进行多人在线的通话。通话之前必须推出接收线程。</p>
+<p>也就是说设计大师们将复杂的TCP/IP协议簇隐藏在了socket接口的后面，对我们这些用户而言。socket就是全部，去组织数据，去符合指定的协议。</p>
+</li>
+<li><p>IO多路复用中的select和epoll</p>
+<p>IO多路复用一共有三种模型：select、poll、epoll。从左到右，其性能变强。</p>
+<p>这次我选择的是IO多路复用中的select模型（因为我太菜了）。</p>
+<p>先说说什么是多路复用：多路是指多个句柄<strong>并发</strong>下来的IO；复用是指复用这一个后台处理程序。</p>
+<p>对于任何一个程序员而言，只要你不是位置最高的那一个，比如雷军，对于剩下的程序员，业务方就是上帝，我们只能服从。他们给我们多少个fd，我们就需要处理多少个，并且最好还要并发起来。</p>
+<p>select模型是非常笨的模型，对于业务方给的所有fd，select模型并不知道哪一个的IO做好了准备，所以它就是去遍历所有的fd，最好的情况就是$O(1)$，最差的情况是$O(n)$，平均下来依然是$O(n)$。此外，每次对select的调用，都需要将fd集合从用户态拷贝到内核态，这也增加了一部分的开销。</p>
+<p>所以select所支持的fd数量一般不要超过2014，否则效率就大大降低了。</p>
+</li>
+<li><p>MySql</p>
+<p>其实准确地说到写这篇总结为止，我对MySql也只能说会用一点点。所以我这里也就总结我会的这一点点。</p>
+<p>我们经常说MySql数据库，实际上MySql只是数据库中的一种。</p>
+<p>数据库，DataBase，简称DB，分为两种：</p>
+<ul>
+<li><p>关系型数据库（SQL）：通过外键关联来建立表与表之间的联系。</p>
+<p>例如：MySQL、Oracle、SQL Server等。</p>
+</li>
+<li><p>非关系型数据库（NOSQL）：数据以对象的形式存储在数据库中，对象之间的关系通过每个对象自身的属性来决定。</p>
+<p>例如：Redis等。</p>
+</li>
+</ul>
+<p>还有个东西叫作数据库管理系统（DataBase Management System，DBMS），用于科学地组织存储、获取维护数据。MySQL也属于这种。</p>
+<p>安装啥的不说了，说说它的操作：（**先提前声明，sql语言命令末尾要加;**）</p>
+<ul>
+<li><p>结构化查询语句分类：四种</p>
+<ul>
+<li>DDL（数据定义语言）：定义和管理数据对象，例如数据库、数据表；使用到的命令包括CREATE、DROP、ALTER<ul>
+<li>创建数据库：create database 数据库名;</li>
+<li>删除数据库：drop database 数据库名;</li>
+<li>查看数据库：show databases;</li>
+<li>使用数据库：use 数据库名;</li>
+</ul>
+</li>
+<li>DML（数据操作语言）：用于操作数据库对象中的数据，使用到的命令包括INSERT、UPDATE、DELETE</li>
+<li>DQL（数据查询语言）：用于查询数据库数据，使用到的命令包括SELECT</li>
+<li>DCL（数据控制语言）：用于管理数据库的编码语言，使用到的命令包括GRANT、commit、rollback</li>
+</ul>
+</li>
+<li><p>数据值和列类型：（列类型是指该列存放的数据类型）</p>
+<p>常规的char、int、float、double就不说了，只是要注意，是没有string类型的！！！！！！！</p>
+</li>
+<li><p>数据表类型：包括MyISAM、InnoDB、HEAP、BOB、CSV等。</p>
+</li>
+<li><p>外键：外键表示的是两个关系之间的相关联系。也就是能够通过外键，实现两个库中的某个相同的列的值是一样的。但是一旦在两个表之间建立了外键，就意味着一个是主表，另一个是子表，要想删掉主表，必须先删掉子表。</p>
+</li>
+</ul>
+</li>
+</ul>
 
             </div>
             <hr>
@@ -268,18 +344,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2021/08/19/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%BC%80%E5%8F%91%EF%BC%88%E4%BA%94%EF%BC%89%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B%E7%AC%AC%E4%B8%80%E4%B8%AA%E9%98%B6%E6%AE%B5%E6%80%A7%E6%80%BB%E7%BB%93/">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">服务器开发（五）网络编程第一个阶段性总结</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2021/08/16/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%BC%80%E5%8F%91%EF%BC%88%E4%B8%89%EF%BC%89%E5%9F%BA%E4%BA%8Eselect%E7%9A%84%E5%B0%8F%E5%9E%8B%E8%81%8A%E5%A4%A9%E7%BC%96%E7%A8%8B%E2%91%A1/">
-                        <span class="hidden-mobile">服务器开发（三）基于select的小型聊天编程②</span>
+                      <a href="/2021/08/19/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%BC%80%E5%8F%91%EF%BC%88%E5%9B%9B%EF%BC%89%E5%9F%BA%E4%BA%8Eselect%E7%9A%84%E5%B0%8F%E5%9E%8B%E8%81%8A%E5%A4%A9%E7%BC%96%E7%A8%8B%E2%91%A2/">
+                        <span class="hidden-mobile">服务器开发（四）基于select的小型聊天编程③</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
