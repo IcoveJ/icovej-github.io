@@ -231,9 +231,13 @@
               <h1 id="1、原理"><a href="#1、原理" class="headerlink" title="1、原理"></a>1、原理</h1><p>在真实生活中，即使同一时刻有上百万的用户同时与一个进程保持着TCP连接，但也只有几十个或几百个TCP连接是活跃的，换句话说，每一时刻进程只需要处理这上百万连接中的没少一部分。正如前面所说，select就是去轮询这所有的连接，去找到其中的活跃部分，poll也是如此。在这两种处理方式中，将上百万的套接字传给操作系统以实现用户态内存到内核态内存的复制，之后由操作系统内核去寻找活跃的连接，内核的处理能力有是有限的，所以一般是设置为的1024.</p>
 <p><code>epoll</code>就不再是傻傻的去一个一个找，而是在内核中申请一个简易的文件系统，将原来的一个select或poll分为了三个部分：</p>
 <ul>
-<li>调用<code>epoll_create</code>建立一个<code>epoll</code>对象</li>
-<li>调用<code>epoll_ctl</code>向对象中添加这所有上百万个连接的套接字</li>
-<li>调用<code>epoll_wait</code>收集发生事件的连接</li>
+<li><p>调用<code>epoll_create</code>建立一个<code>epoll</code>对象</p>
+<p>返回的是指向新创建的红黑树的根节点<code>fd</code>，失败返回-1或者<code>errno</code></p>
+</li>
+<li><p>调用<code>epoll_ctl</code>向对象中添加这所有上百万个连接的套接字</p>
+</li>
+<li><p>调用<code>epoll_wait</code>收集发生事件的连接</p>
+</li>
 </ul>
 <p>整个过程就变为了：在进程启动时建立1个<code>epoll</code>对象，在需要时向它添加或删除连接就可以了。</p>
 <p>它高效的原因就在于<code>epoll</code>内部有一棵红黑树。</p>
