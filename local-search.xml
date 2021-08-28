@@ -165,7 +165,7 @@
     
     <categories>
       
-      <category>学习笔记/C++</category>
+      <category>C/C++</category>
       
     </categories>
     
@@ -184,7 +184,7 @@
     
     <categories>
       
-      <category>学习笔记/C++</category>
+      <category>C/C++</category>
       
     </categories>
     
@@ -203,7 +203,7 @@
     
     <categories>
       
-      <category>学习笔记/C++</category>
+      <category>C/C++</category>
       
     </categories>
     
@@ -220,6 +220,12 @@
     <content type="html"><![CDATA[]]></content>
     
     
+    <categories>
+      
+      <category>C/C++</category>
+      
+    </categories>
+    
     
   </entry>
   
@@ -235,7 +241,7 @@
     
     <categories>
       
-      <category>学习笔记/操作系统</category>
+      <category>操作系统</category>
       
     </categories>
     
@@ -254,7 +260,7 @@
     
     <categories>
       
-      <category>学习笔记/计网</category>
+      <category>计算机网络</category>
       
     </categories>
     
