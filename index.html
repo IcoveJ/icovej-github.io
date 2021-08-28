@@ -182,6 +182,100 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/08/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9Fbootset/" target="_self">
+          操作系统bootset
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/08/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9Fbootset/" target="_self">
+          
+          
+            
+          
+          哈工大操作系统汇编代码学习：
+几个字段的值：
+12345BOOTSEG = 0x07c0INITSEG = 0X9000SETUPSEG = 0x9020SYSSEG = 0x1000ENDSEG = SYSSEG + SYSSIZE
+
+引导扇区的作用：启动设备的第一个扇区，启动设备信息被设置在CMOS中。硬盘的第一个扇区存储着开机后执行的第一段可以控制的代码：
+1、第一段代码1234567891
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-08-28 15:39" pubdate>
+              2021-08-28
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>
+            
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="/2021/08/25/fork%E5%87%BD%E6%95%B0%E5%8F%8A%E5%AD%90%E7%88%B6%E8%BF%9B%E7%A8%8B%E7%9A%84%E6%89%A7%E8%A1%8C%E5%85%88%E5%90%8E%E9%97%AE%E9%A2%98/" target="_self">
+          fork函数及子父进程的执行先后问题
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/08/25/fork%E5%87%BD%E6%95%B0%E5%8F%8A%E5%AD%90%E7%88%B6%E8%BF%9B%E7%A8%8B%E7%9A%84%E6%89%A7%E8%A1%8C%E5%85%88%E5%90%8E%E9%97%AE%E9%A2%98/" target="_self">
+          
+          
+            
+          
+          这篇文章的目的是去了解Linux中fork函数的使用，以及子父进程方面的有些知识。
+一个进程，它包括了代码、数据和分配给进程的资源。而fork函数就是通过系统调用创建一个与原来进程几乎完全相同的进程，它们俩可以做完全相同的事情，也可以不同。完全取决于初始参数或传入变量是否相同。
+一个进程调用fork函数后，系统给新的进程分配资源，然后把原来进程的所有值都复制到这个新的进程中。
+进程调用fork后，
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-08-25 09:24" pubdate>
+              2021-08-25
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%BC%80%E5%8F%91/">服务器开发</a>
+            
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/08/21/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%BC%80%E5%8F%91%EF%BC%88%E5%85%AD%EF%BC%89IO%E5%A4%9A%E8%B7%AF%E5%A4%8D%E7%94%A8%E2%80%94%E2%80%94epoll/" target="_self">
           服务器开发（六）IO多路复用——epoll
         </a>
@@ -547,86 +641,6 @@ MySql-8.
               <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-C/">学习笔记/C++</a>
             
           </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/08/11/C-%E5%AD%A6%E4%B9%A0%EF%BC%9Anamespace/" target="_self">
-          C++学习：namespace
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/08/11/C-%E5%AD%A6%E4%B9%A0%EF%BC%9Anamespace/" target="_self">
-          
-          
-            
-          
-          在初次学习一门语言时都是从hello world开始的，笔者学习的第一门语言是C++
-1234567#include &lt;iostream&gt;using namespace std;int main()&#123;    cout &lt;&lt; &quot;Hello World!\n&quot;;// cout &lt;&lt; &quot;Hello World!&quot; &l
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-08-11 15:59" pubdate>
-              2021-08-11
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0-C/">学习笔记/C++</a>
-            
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/08/09/C%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84union%E5%8F%8A%E5%A4%A7%E5%B0%8F%E7%AB%AF%E9%97%AE%E9%A2%98/" target="_self">
-          C语言中的union及大小端问题
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/08/09/C%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84union%E5%8F%8A%E5%A4%A7%E5%B0%8F%E7%AB%AF%E9%97%AE%E9%A2%98/" target="_self">
-          
-          
-            
-          
-          
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-08-09 21:59" pubdate>
-              2021-08-09
-            </time>
-          </div>
-        
         
         
       </div>
