@@ -182,6 +182,49 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="/2021/08/30/%E5%88%B7%E9%A2%98%E7%AC%AC%E4%BA%8C%E5%A4%A9/" target="_self">
+          刷题第二天
+        </a>
+      </h1>
+
+      <p class="index-excerpt">
+        <a href="/2021/08/30/%E5%88%B7%E9%A2%98%E7%AC%AC%E4%BA%8C%E5%A4%A9/" target="_self">
+          
+          
+            
+          
+          第二天：贪心算法（二）605 Can Place Flowers问题描述：假设有一个很长的花坛，一部分地块种植了花，另一部分却没有。可是，花不能种植在相邻的地块上，它们会争夺水源，两者都会死去。给你一个整数数组  flowerbed 表示花坛，由若干 0 和 1 组成，其中 0 表示没种植花，1 表示种植了花。另有一个数 n ，能否在不打破种植规则的情况下种入 n 朵花？能则返回 true ，不能
+        </a>
+      </p>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2021-08-30 19:14" pubdate>
+              2021-08-30
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E5%88%B7%E9%A2%98%E7%AC%94%E8%AE%B0/">刷题笔记</a>
+            
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="/2021/08/29/%E5%88%B7%E9%A2%98%E7%AC%AC%E4%B8%80%E5%A4%A9/" target="_self">
           刷题第一天
         </a>
@@ -232,7 +275,7 @@
       <h1 class="index-header">
         
         <a href="/2021/08/28/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9Fsetup/" target="_self">
-          操作系统setup
+          
         </a>
       </h1>
 
@@ -242,7 +285,12 @@
           
             
           
-          
+          在bootsect.s中从软盘中把第2到第5扇区的setup.s程序读入到内存0x90200处。
+setup做了什么事情？
+①填写硬盘参数表
+②将0x10000（64K）地址到0x8ffff这段system内核代码移动到0地址处
+③为进入保护模式做准备，包括加载和填充中断描述符寄存器和全局描述符寄存器、开启A20地址线、重新设置两个中断控制芯片8259A，将中断号重新设置为0x20-0x2f
+④设
         </a>
       </p>
 
@@ -255,6 +303,13 @@
             </time>
           </div>
         
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-category"></i>
+            
+              <a href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a>
+            
+          </div>
         
         
       </div>
@@ -572,52 +627,6 @@ MySql-8.
             <i class="iconfont icon-date"></i>
             <time datetime="2021-08-15 19:18" pubdate>
               2021-08-15
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-category"></i>
-            
-              <a href="/categories/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%BC%80%E5%8F%91/">服务器开发</a>
-            
-          </div>
-        
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="/2021/08/13/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%BC%80%E5%8F%91%EF%BC%88%E4%B8%80%EF%BC%89%E5%88%86%E5%B8%83%E5%BC%8F%E3%80%81%E5%A4%9A%E7%BA%BF%E7%A8%8B%E3%80%81%E9%AB%98%E5%B9%B6%E5%8F%91/" target="_self">
-          服务器开发（一）分布式、多线程、高并发
-        </a>
-      </h1>
-
-      <p class="index-excerpt">
-        <a href="/2021/08/13/%E6%9C%8D%E5%8A%A1%E5%99%A8%E5%BC%80%E5%8F%91%EF%BC%88%E4%B8%80%EF%BC%89%E5%88%86%E5%B8%83%E5%BC%8F%E3%80%81%E5%A4%9A%E7%BA%BF%E7%A8%8B%E3%80%81%E9%AB%98%E5%B9%B6%E5%8F%91/" target="_self">
-          
-          
-            
-          
-          在尝试着做服务器方面的项目开发，之前也对分布式、高并发、多线程有过一定的了解，但并未有过系统的认识，固去做深入的理解，并记录。
-1、分布式系统分布式系统在上世纪末期就被提出，后被Google发扬光大，熟悉的MapReduce、BigTable等都是基于的分布式系统。
-什么是分布式系统？在网上看到过两个比较好的解释：
-①a system with multiple components locate
-        </a>
-      </p>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2021-08-13 19:47" pubdate>
-              2021-08-13
             </time>
           </div>
         
