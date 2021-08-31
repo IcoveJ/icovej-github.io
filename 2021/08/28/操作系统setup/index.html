@@ -185,7 +185,7 @@
     
     <span class="post-meta mr-2">
       <i class="iconfont icon-chart"></i>
-      1.9k 字
+      2.7k 字
     </span>
   
 
@@ -195,7 +195,7 @@
       <i class="iconfont icon-clock-fill"></i>
       
       
-      22
+      32
        分钟
     </span>
   
@@ -278,7 +278,44 @@
 <h1 id="第八段代码"><a href="#第八段代码" class="headerlink" title="第八段代码"></a>第八段代码</h1><p>CPU要求在进入保护模式之前需设置IDT表，这里先设置一个长度为0的空表。同时还要加载一个GDT</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs assembly">end_move:<br>	mov	ax,#SETUPSEG	<br>	mov	ds,ax			! ds == 0x9020，指向本程序段，setup.s被加载到0x90200<br>	lidt	idt_48		! idt_48标号处内容为：<br>						! 					.word	0	! idt界限值 = 0<br>						! 					.word	0,0	! idt基地址 = 0L<br>	lgdt	gdt_48		! gdt_48标号处内容为：<br>						! 					.word	0x800	! 0x800 = 2048, 2048/8=256,可容纳256个描述符<br>						! 					.word	512+gdt,0x9	! setup.s被加载到0x90200, gdt base = 0x90200+gdt = 0x90000+512+gdt<br></code></pre></td></tr></table></figure>
 
-<p>系统开机时，是默认进入实模式，要想进入保护模式，必须先设置GDT表</p>
+<p>系统开机时，是默认进入实模式，要想进入保护模式，必须先设置GDT表，所以必须先设置GDT表。</p>
+<p>进入保护模式后，如果不开启分页，那么线性地址等同于物理地址，也就是说在实模式设置GDT的时候，用的是物理地址；启用分页，线性地址要经过页部件转换后才是物理地址</p>
+<h1 id="第九段代码"><a href="#第九段代码" class="headerlink" title="第九段代码"></a>第九段代码</h1><p>这段代码是为了开启A20数据线。什么是A20数据线？</p>
+<p>在8088CPU中，只有20根数据线，A0~A19。后来在80286CPU下，更新为了24根数据线，为了能够向下兼容，使老版本的VPU也能够使用新开的数据线，就使用8042键盘上空闲的端口引脚（输出端口P2，引脚名P21）来作为与门控制这个地址的比特位。这个信号被称为A20。若A20为令，则比特20及以上的地址都被清除。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs assembly">call empty_8042		! 等待输入缓冲器为空<br>mov al,#0xD1		<br>out #0x64,al		! 向端口0x64，即输入缓冲器，写入命令0xD1<br>					! 命令0xD1，表示写8042的输出端口P2，这个命令后带一个字节的参数，要开启A20，那么这个参数的bl必须为1<br>call empty_8042		! 等待输入缓冲器为空，也即命令被接受<br>mov al,#0xDF		! 0xDF就是这个参数，它的二进制是1101 1111，A20开启<br>out #0x60,al		! 向端口0x60，即输入缓冲器，写入命令0xDF<br>call empty_8042		! 等待输入缓冲器为空，也即命令被接受<br></code></pre></td></tr></table></figure>
+
+<p>其中的0x64与0x60都是8042键盘控制器的端口</p>
+<p>empty_8042过程：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs assembly">empty_8042:<br>			.word	0x00eb,0x00eb		! 机器码，跳转到下一句，为了延时<br>			in	al,#0x64				! 读端口 0x64 到 AL<br>			test al,#2					! 检测bit 1，判断输入缓冲器是否已满<br>			jnz	empty_8042<br>			ret<br></code></pre></td></tr></table></figure>
+
+<h1 id="第十段代码"><a href="#第十段代码" class="headerlink" title="第十段代码"></a>第十段代码</h1><p>设置8259芯片</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs assembly">; ICW1 <br>	mov	al,#0x11		<br>	out	#0x20,al				! 0x20是主片端口地址，写入0x11，表示初始化命令开始<br>	.word	0x00eb,0x00eb		<br>	out	#0xA0,al				! 0xA0是从片端口地址，写入0x11<br>	.word	0x00eb,0x00eb<br>	;------------------------------------------------------<br>	; ICW2<br>	mov	al,#0x20		<br>	out	#0x21,al<br>	.word	0x00eb,0x00eb<br>	mov	al,#0x28		<br>	out	#0xA1,al<br>	.word	0x00eb,0x00eb<br>	;-------------------------------------------------------<br>	; ICW3<br>	mov	al,#0x04		<br>	out	#0x21,al<br>	.word	0x00eb,0x00eb<br>	mov	al,#0x02		<br>	out	#0xA1,al<br>	.word	0x00eb,0x00eb<br>	;------------------------------------------------------<br>	; ICW4<br>	mov	al,#0x01		<br>	out	#0x21,al<br>	.word	0x00eb,0x00eb<br>	out	#0xA1,al<br>	.word	0x00eb,0x00eb<br>	;------------------------------------------------------<br>	; OCW1<br>	mov	al,#0xFF		<br>	out	#0x21,al<br>	.word	0x00eb,0x00eb<br>	out	#0xA1,al<br></code></pre></td></tr></table></figure>
+
+<p>0x00eb是一条表示相对跳转的机器码，能够起到延时的作用，在这里这两个机器码能够延时14~20个CPU时钟周期</p>
+<h1 id="第十一段代码"><a href="#第十一段代码" class="headerlink" title="第十一段代码"></a>第十一段代码</h1><p>进入保护模式</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs assembly">mov	ax,#0x0001	! 保护模式开启<br>lmsw ax		    ! lmsw只加载低4位<br>jmpi 0,8		! 执行后，cs=8，ip=0。同时8也是保护模式下的段选择子，用于选择描述符表（GDT 或 LDT）和描述符表项以及所要求的特权级。<br></code></pre></td></tr></table></figure>
+
+<p>最后还有一个GDT表：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs assembly">gdt:<br>	.word	0,0,0,0		<br><br>	.word	0x07FF		<br>	.word	0x0000		<br>	.word	0x9A00		<br>	.word	0x00C0		<br><br>	.word	0x07FF		<br>	.word	0x0000		<br>	.word	0x9200		<br>	.word	0x00C0		<br><br></code></pre></td></tr></table></figure>
+
+<p>setup.s 做的工作有：</p>
+<ul>
+<li>获取一些参数保存在 0x90000 处<ul>
+<li>保存光标的位置</li>
+<li>获取从 1M 处开始的扩展内存大小</li>
+<li>获取显示模式</li>
+<li>检查显示方式(EGA/VGA)并获取参数</li>
+<li>复制硬盘参数表（包括检查系统是否有第2个硬盘）</li>
+</ul>
+</li>
+<li>关中断</li>
+<li>移动 system 模块到 0x00000</li>
+<li>加载 IDT 和 GDT</li>
+<li>开启 A20</li>
+<li>设置 8259</li>
+<li>进入保护模式（使 CR0 的 PE 位 = 1）</li>
+<li>跳转到 0 地址执行</li>
+</ul>
 
             </div>
             <hr>
