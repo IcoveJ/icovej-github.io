@@ -257,7 +257,7 @@
 <li><p>代码实现：</p>
 <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">findMinArrowShots</span><span class="hljs-params">(vector&lt;vector&lt;<span class="hljs-keyword">int</span>&gt;&gt;&amp; points)</span> </span>&#123;<br>    <span class="hljs-keyword">if</span> (points.<span class="hljs-built_in">size</span>() == <span class="hljs-number">0</span>)<br>        <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-built_in">sort</span>(points.<span class="hljs-built_in">begin</span>(), points.<span class="hljs-built_in">end</span>(), [](<span class="hljs-keyword">const</span> vector&lt;<span class="hljs-keyword">int</span>&gt;&amp; a, <span class="hljs-keyword">const</span> vector&lt;<span class="hljs-keyword">int</span>&gt;&amp; b)&#123;<span class="hljs-keyword">return</span> a[<span class="hljs-number">0</span>] &lt; b[<span class="hljs-number">0</span>];&#125;);<br>	<span class="hljs-keyword">int</span> result = <span class="hljs-number">1</span>;	<span class="hljs-comment">// 不管怎样，至少都需要一只箭</span><br>    <span class="hljs-keyword">for</span> (<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i &lt; points.<span class="hljs-built_in">size</span>(); ++i)&#123;<br>        <span class="hljs-keyword">if</span> (points[i][<span class="hljs-number">0</span>] &gt; points[i - <span class="hljs-number">1</span>][<span class="hljs-number">1</span>])&#123;<br>            result += <span class="hljs-number">1</span>;<br>        &#125;<span class="hljs-keyword">else</span>&#123;<br>            points[i][<span class="hljs-number">1</span>] = <span class="hljs-built_in">min</span>(points[i - <span class="hljs-number">1</span>][<span class="hljs-number">1</span>], points[i][<span class="hljs-number">1</span>]);<br>        &#125;<br>    &#125;<br>	<span class="hljs-keyword">return</span> result;<br>&#125;<br></code></pre></td></tr></table></figure></li>
 </ul>
-<h2 id="763-划分字母区间"><a href="#763-划分字母区间" class="headerlink" title="763 划分字母区间"></a>763 划分字母区间</h2><p><strong>问题描述</strong>：字符串 S 由小写字母组成。我们要把这个字符串划分为尽可能多的片段，同一字母最多出现在一个片段中。返回一个表示每个字符串片段的长度的列表。</p>
+<h2 id="763-Partition-Labels"><a href="#763-Partition-Labels" class="headerlink" title="763 Partition Labels"></a>763 Partition Labels</h2><p><strong>问题描述</strong>：字符串 S 由小写字母组成。我们要把这个字符串划分为尽可能多的片段，同一字母最多出现在一个片段中。返回一个表示每个字符串片段的长度的列表。</p>
 <p><strong>输入输出样例</strong>：例如输入S = “ababcbacadefegdehijhklij”，输出[9,7,8]。划分结果为 “ababcbaca”, “defegde”, “hijhklij”。</p>
 <p><strong>个人题解</strong>：</p>
 <ul>
@@ -295,6 +295,12 @@
                 <div class="post-prevnext">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2021/08/31/%E5%88%B7%E9%A2%98%E7%AC%AC%E4%B8%89%E5%A4%A9/">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">刷题第三天</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
